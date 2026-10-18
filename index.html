@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Digital Clock | IoT Dashboard</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #172b43;
+  background: #edf3f8;
+}
+header {
+  background: white;
+  padding: 18px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dce6ef;
+  gap: 15px;
+}
+.brand { display: flex; align-items: center; gap: 13px; }
+.logo {
+  background: #0788d1;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 24px;
+}
+h1 { margin: 0; font-size: 21px; }
+.sub { color: #71839a; font-size: 12px; margin-top: 5px; }
+button {
+  padding: 10px 14px;
+  background: white;
+  border: 1px solid #dbe5ef;
+  color: #0788d1;
+  border-radius: 8px;
+  cursor: pointer;
+}
+main { padding: 28px; max-width: 1500px; margin: auto; }
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #71839a;
+  font-weight: bold;
+}
+.intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+h2 { font-size: 28px; margin: 12px 0 8px; }
+.muted { color: #71839a; font-size: 13px; }
+.status { color: #08a878; font-size: 12px; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 18px;
+  margin-bottom: 26px;
+}
+.card, .panel {
+  background: white;
+  border: 1px solid #dce6ef;
+  border-radius: 13px;
+  padding: 23px;
+  box-shadow: 0 2px 5px #23374d05;
+}
+.card-top { display: flex; justify-content: space-between; }
+.metric { font-size: 35px; font-weight: 750; margin: 16px 0 8px; }
+.blue { color: #0788d1; }
+.orange { color: #e77d30; }
+.green { color: #08a878; }
+.layout {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 22px;
+}
+h3 { font-size: 17px; margin: 12px 0 20px; }
+.clock-box {
+  background: linear-gradient(135deg,#edf8ff,#f9fbfd);
+  border: 1px solid #dbeaf5;
+  border-radius: 12px;
+  text-align: center;
+  padding: 32px 10px;
+  margin: 16px 0;
+}
+.clock {
+  font-size: clamp(35px,5vw,58px);
+  font-weight: 750;
+  color: #0788d1;
+  letter-spacing: 2px;
+  margin: 12px 0;
+}
+.date { color: #71839a; font-size: 13px; }
+.details {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.detail {
+  background: #f5f8fb;
+  border-radius: 9px;
+  padding: 14px;
+  color: #71839a;
+  font-size: 11px;
+}
+.detail strong {
+  display: block;
+  color: #172b43;
+  font-size: 14px;
+  margin-top: 8px;
+}
+.chart {
+  height: 180px;
+  display: flex;
+  align-items: end;
+  justify-content: space-around;
+  gap: 12px;
+  padding: 18px 12px 0;
+  border-bottom: 1px solid #dce6ef;
+  background: repeating-linear-gradient(
+    to bottom, white 0, white 43px, #edf2f7 44px, white 45px
+  );
+}
+.bar {
+  flex: 1;
+  max-width: 42px;
+  background: linear-gradient(#32b4ef,#0788d1);
+  border-radius: 6px 6px 0 0;
+  min-height: 12px;
+  transition: height .3s;
+}
+.legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  color: #71839a;
+  font-size: 11px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 12px;
+}
+th, td {
+  padding: 12px 5px;
+  text-align: left;
+  border-bottom: 1px solid #e8eef4;
+}
+th { color: #71839a; font-size: 10px; }
+footer {
+  padding: 24px;
+  text-align: center;
+  color: #71839a;
+  font-size: 12px;
+}
+@media(max-width:800px) {
+  header { flex-wrap: wrap; }
+  main { padding: 16px; }
+  .cards, .layout { grid-template-columns: 1fr; }
+  .intro { align-items: flex-start; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">◷</div>
+    <div>
+      <h1>Smart Digital Clock</h1>
+      <div class="sub">IoT Environment Monitoring Dashboard</div>
+    </div>
+  </div>
+  <button id="modeButton" onclick="toggleMode()">◉ Simulation Mode</button>
+</header>
+
+<main>
+  <section class="intro">
+    <div>
+      <div class="eyebrow">WORKSPACE / OVERVIEW</div>
+      <h2>A smarter way to monitor.</h2>
+      <div class="muted">Everything you need to monitor time and environment.</div>
+    </div>
+    <div class="status" id="status">● Simulation running</div>
+  </section>
+
+  <section class="cards">
+    <article class="card">
+      <div class="card-top">
+        <span class="muted">Digital Clock</span><span class="blue">◷</span>
+      </div>
+      <div class="metric blue" id="topTime">--:--:--</div>
+      <div class="muted">DS1307 Real-Time Clock</div>
+    </article>
+    <article class="card">
+      <div class="card-top">
+        <span class="muted">Temperature</span><span class="orange">♨</span>
+      </div>
+      <div class="metric orange"><span id="temperature">28.5</span>°C</div>
+      <div class="muted">LM35 Temperature Sensor</div>
+    </article>
+    <article class="card">
+      <div class="card-top">
+        <span class="muted">System Status</span><span class="green">●</span>
+      </div>
+      <div class="metric green" style="font-size:28px" id="system">ONLINE</div>
+      <div class="muted" id="systemInfo">Local monitoring dashboard</div>
+    </article>
+  </section>
+
+  <section class="layout">
+    <article class="panel">
+      <div class="eyebrow">LIVE DEVICE DATA</div>
+      <h3>Digital Clock Overview</h3>
+      <div class="clock-box">
+        <div class="eyebrow">CURRENT TIME</div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date"></div>
+      </div>
+      <div class="details">
+        <div class="detail">RTC MODULE<strong id="rtc">DS1307 · Demo</strong></div>
+        <div class="detail">TEMPERATURE SENSOR<strong id="sensor">LM35 · Demo</strong></div>
+        <div class="detail">WI-FI CONNECTION<strong id="wifi">Simulation</strong></div>
+        <div class="detail">LAST UPDATE<strong id="updated">Just now</strong></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="eyebrow">ENVIRONMENT MONITORING</div>
+      <h3>Temperature History</h3>
+      <div class="muted">Recent temperature readings</div>
+      <div class="chart" id="chart"></div>
+      <div class="legend"><span>Oldest</span><span>Temperature (°C)</span><span>Latest</span></div>
+      <table>
+        <thead><tr><th>TIME</th><th>TEMPERATURE</th><th>SOURCE</th></tr></thead>
+        <tbody id="history"></tbody>
+      </table>
+      <button onclick="newSample()">+ New Sample</button>
+    </article>
+  </section>
+</main>
+
+<footer>Smart Digital Clock & Environment Monitor System · ESP8266 Local Web Server</footer>
+
+<script>
+let demo = true;
+let temp = 28.5;
+let readings = [];
+
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('vi-VN', {hour12:false});
+  document.getElementById('clock').textContent = time;
+  document.getElementById('topTime').textContent = time;
+  document.getElementById('date').textContent =
+    now.toLocaleDateString('vi-VN', {
+      weekday:'long', day:'numeric', month:'long', year:'numeric'
+    });
+}
+
+function newSample() {
+  temp = Math.max(20, Math.min(38, temp + (Math.random() - .5) * 2));
+  document.getElementById('temperature').textContent = temp.toFixed(1);
+  document.getElementById('updated').textContent =
+    new Date().toLocaleTimeString('vi-VN', {hour12:false});
+
+  readings.push({
+    time: new Date().toLocaleTimeString('vi-VN', {hour12:false}),
+    temp: temp
+  });
+  readings = readings.slice(-8);
+  renderReadings();
+}
+
+function renderReadings() {
+  document.getElementById('chart').innerHTML = readings.map(r => {
+    const height = Math.max(12, Math.min(100, r.temp * 2.2));
+    return `<div class="bar" title="${r.temp.toFixed(1)} °C"
+      style="height:${height}%"></div>`;
+  }).join('');
+
+  document.getElementById('history').innerHTML =
+    readings.slice().reverse().slice(0,5).map(r =>
+      `<tr><td>${r.time}</td>
+      <td>${r.temp.toFixed(1)} °C</td>
+      <td>${demo ? 'Simulation' : 'ESP8266'}</td></tr>`
+    ).join('');
+}
+
+function toggleMode() {
+  demo = !demo;
+  document.getElementById('modeButton').textContent =
+    demo ? '◉ Simulation Mode' : '◉ Device Mode';
+  document.getElementById('status').textContent =
+    demo ? '● Simulation running' : '● Device mode selected';
+  document.getElementById('system').textContent =
+    demo ? 'ONLINE' : 'WAITING';
+  document.getElementById('systemInfo').textContent =
+    demo ? 'Local monitoring dashboard' : 'Device API not connected yet';
+  document.getElementById('wifi').textContent =
+    demo ? 'Simulation' : 'Not connected';
+}
+
+updateClock();
+for (let i = 0; i < 6; i++) newSample();
+setInterval(updateClock, 1000);
+setInterval(() => {
+  if (demo) newSample();
+}, 5000);
+</script>
+</body>
+</html>
