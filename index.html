@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Digital Clock | IoT Dashboard</title>
+<title>Smart Digital Clock | IoT Dashboard & AI Box</title>
 <style>
 * { box-sizing: border-box; }
 body {
@@ -12,6 +11,7 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   color: #172b43;
   background: #edf3f8;
+  scroll-behavior: smooth;
 }
 header {
   background: white;
@@ -39,6 +39,12 @@ button {
   color: #0788d1;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+button:hover {
+  background: #f0f7fd;
+  border-color: #0788d1;
 }
 main { padding: 28px; max-width: 1500px; margin: auto; }
 .eyebrow {
@@ -56,7 +62,7 @@ main { padding: 28px; max-width: 1500px; margin: auto; }
 }
 h2 { font-size: 28px; margin: 12px 0 8px; }
 .muted { color: #71839a; font-size: 13px; }
-.status { color: #08a878; font-size: 12px; }
+.status { color: #08a878; font-size: 12px; font-weight: 600; }
 .cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
@@ -155,17 +161,476 @@ th, td {
   border-bottom: 1px solid #e8eef4;
 }
 th { color: #71839a; font-size: 10px; }
+
+/* =========================================================
+   AI BOX STYLES (TRỌNG TÂM: AI BOX TÍCH HỢP CHO DASHBOARD)
+   ========================================================= */
+.ai-box-section {
+  margin-top: 26px;
+}
+.ai-box-panel {
+  background: white;
+  border: 1px solid #d2e4f3;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(7, 136, 209, 0.08);
+  position: relative;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.ai-box-panel.highlight {
+  border-color: #0788d1;
+  box-shadow: 0 0 0 3px rgba(7, 136, 209, 0.25), 0 8px 24px rgba(7, 136, 209, 0.15);
+}
+.ai-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eef3f8;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ai-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ai-badge-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0788d1 0%, #00b4d8 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(7, 136, 209, 0.28);
+}
+.ai-box-title {
+  margin: 4px 0 0;
+  font-size: 20px;
+  color: #172b43;
+}
+.ai-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ai-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: #eafaf4;
+  border: 1px solid #b7ebd9;
+  color: #08a878;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ai-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #08a878;
+  box-shadow: 0 0 0 0 rgba(8, 168, 120, 0.7);
+  animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 168, 120, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(8, 168, 120, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 168, 120, 0); }
+}
+
+/* AI Grid: Left (Diagnostics) - Right (Interactive Chat) */
+.ai-box-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 24px;
+  margin-top: 22px;
+}
+
+/* Cột trái: AI Diagnostics & Insights */
+.ai-diag-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ai-insight-card {
+  background: linear-gradient(135deg, #f0f7ff 0%, #f7fbfe 100%);
+  border: 1px solid #cfe5f7;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.ai-insight-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.ai-insight-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0788d1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.ai-insight-body {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #243a52;
+  margin-bottom: 12px;
+}
+.ai-diag-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.ai-metric-item {
+  background: #f8fafc;
+  border: 1px solid #e7edf3;
+  border-radius: 10px;
+  padding: 12px;
+}
+.ai-metric-label {
+  font-size: 11px;
+  color: #71839a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ai-metric-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #172b43;
+  margin-top: 4px;
+}
+.ai-advice-box {
+  background: #fbfbf6;
+  border: 1px solid #f2edd2;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #5d4a13;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.ai-advice-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Cột phải: Khung hội thoại AI Box */
+.ai-chat-col {
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  border: 1px solid #e2eaf1;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 480px;
+}
+.ai-chat-header {
+  padding: 12px 18px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eef5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ai-chat-header-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #253b53;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ai-msg {
+  max-width: 86%;
+  padding: 11px 15px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ai-msg.assistant {
+  align-self: flex-start;
+  background: white;
+  border: 1px solid #e2eaf0;
+  border-top-left-radius: 4px;
+  color: #1e3347;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.ai-msg.user {
+  align-self: flex-end;
+  background: #0788d1;
+  color: white;
+  border-top-right-radius: 4px;
+  box-shadow: 0 2px 6px rgba(7, 136, 209, 0.2);
+}
+.ai-typing-indicator {
+  display: none;
+  align-self: flex-start;
+  background: white;
+  border: 1px solid #e2eaf0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #71839a;
+  align-items: center;
+  gap: 6px;
+}
+.ai-typing-indicator.active { display: flex; }
+.ai-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.ai-dot {
+  width: 5px;
+  height: 5px;
+  background: #0788d1;
+  border-radius: 50%;
+  animation: bounceDot 1.4s infinite ease-in-out both;
+}
+.ai-dot:nth-child(1) { animation-delay: -0.32s; }
+.ai-dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounceDot {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Câu hỏi gợi ý nhanh */
+.ai-quick-chips {
+  padding: 8px 14px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  background: #f1f6fa;
+  border-top: 1px solid #e7edf3;
+}
+.ai-chip {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-radius: 20px;
+  background: white;
+  border: 1px solid #d5e3ef;
+  color: #0788d1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ai-chip:hover {
+  background: #0788d1;
+  color: white;
+  border-color: #0788d1;
+}
+
+/* Input Form */
+.ai-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: white;
+  border-top: 1px solid #e6eef5;
+}
+.ai-input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid #d5e3ef;
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #172b43;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ai-input:focus {
+  border-color: #0788d1;
+  box-shadow: 0 0 0 2px rgba(7, 136, 209, 0.18);
+}
+.ai-send-btn {
+  padding: 0 18px;
+  background: #0788d1;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ai-send-btn:hover {
+  background: #0675b5;
+}
+.ai-send-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   FLOATING CHAT LAUNCHER & PANEL (GIỮ ĐỒNG BỘ ĐỂ TIỆN DỤNG)
+   ========================================================= */
+.chat-launcher {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #0788d1;
+  color: white;
+  font-size: 25px;
+  box-shadow: 0 8px 24px #0788d14d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chat-launcher:hover { background: #0675b5; transform: scale(1.05); }
+.chat-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 94px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - 32px));
+  height: min(520px, calc(100vh - 125px));
+  min-height: 340px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #dce6ef;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px #172b4326;
+}
+.chat-panel[hidden] { display: none; }
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 17px;
+  color: white;
+  background: #0788d1;
+}
+.chat-heading { display: flex; align-items: center; gap: 11px; }
+.chat-avatar {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  background: #ffffff2b;
+  border-radius: 50%;
+}
+.chat-title { font-size: 14px; font-weight: 700; }
+.chat-subtitle { margin-top: 3px; color: #e4f5ff; font-size: 11px; }
+.chat-close {
+  padding: 5px 9px;
+  border-color: #ffffff55;
+  color: white;
+  background: transparent;
+  font-size: 18px;
+}
+.chat-messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f7f9fc;
+}
+.chat-message {
+  max-width: 88%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.chat-message.assistant {
+  align-self: flex-start;
+  color: #253b53;
+  background: white;
+  border: 1px solid #e5ebf1;
+  border-top-left-radius: 4px;
+}
+.chat-message.user {
+  align-self: flex-end;
+  color: white;
+  background: #0788d1;
+  border-top-right-radius: 4px;
+}
+.chat-suggestions {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 0 14px 12px;
+  background: #f7f9fc;
+}
+.chat-suggestions button {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  color: #0788d1;
+  background: white;
+  font-size: 11px;
+}
+.chat-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e8eef4;
+}
+.chat-input {
+  min-width: 0;
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #dbe5ef;
+  border-radius: 9px;
+  color: #172b43;
+  font: inherit;
+}
+.chat-input:focus { outline: 2px solid #0788d155; border-color: #0788d1; }
+.chat-send { color: white; background: #0788d1; border-color: #0788d1; }
+
 footer {
   padding: 24px;
   text-align: center;
   color: #71839a;
   font-size: 12px;
 }
+
+@media(max-width:960px) {
+  .ai-box-grid { grid-template-columns: 1fr; }
+  .ai-chat-col { height: 420px; }
+}
 @media(max-width:800px) {
   header { flex-wrap: wrap; }
   main { padding: 16px; }
   .cards, .layout { grid-template-columns: 1fr; }
   .intro { align-items: flex-start; flex-direction: column; }
+}
+@media(max-width:480px) {
+  .chat-launcher { right: 16px; bottom: 16px; }
+  .chat-panel { right: 16px; bottom: 86px; }
 }
 </style>
 </head>
@@ -175,22 +640,24 @@ footer {
     <div class="logo">◷</div>
     <div>
       <h1>Smart Digital Clock</h1>
-      <div class="sub">IoT Environment Monitoring Dashboard</div>
+      <div class="sub">IoT Environment Monitoring Dashboard & AI Box</div>
     </div>
   </div>
   <button id="modeButton" onclick="toggleMode()">◉ Simulation Mode</button>
 </header>
 
 <main>
+  <!-- Header Overview -->
   <section class="intro">
     <div>
       <div class="eyebrow">WORKSPACE / OVERVIEW</div>
       <h2>A smarter way to monitor.</h2>
-      <div class="muted">Everything you need to monitor time and environment.</div>
+      <div class="muted">Everything you need to monitor time, environment and AI insights.</div>
     </div>
     <div class="status" id="status">● Simulation running</div>
   </section>
 
+  <!-- Metric Cards -->
   <section class="cards">
     <article class="card">
       <div class="card-top">
@@ -215,6 +682,7 @@ footer {
     </article>
   </section>
 
+  <!-- Overview & History Panels -->
   <section class="layout">
     <article class="panel">
       <div class="eyebrow">LIVE DEVICE DATA</div>
@@ -242,78 +710,512 @@ footer {
         <thead><tr><th>TIME</th><th>TEMPERATURE</th><th>SOURCE</th></tr></thead>
         <tbody id="history"></tbody>
       </table>
-      <button onclick="newSample()">+ New Sample</button>
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button onclick="newSample()">+ New Sample</button>
+        <button onclick="scrollToAiBox()" style="background:#edf8ff; border-color:#0788d1;">✦ Mở AI Box</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- =========================================================
+       AI BOX SECTION (KHUNG AI BOX TÍCH HỢP ĐẦY ĐỦ)
+       ========================================================= -->
+  <section class="ai-box-section" id="aiBoxSection">
+    <article class="panel ai-box-panel" id="aiBoxPanel">
+      <div class="ai-box-header">
+        <div class="ai-header-left">
+          <div class="ai-badge-icon">✦</div>
+          <div>
+            <div class="eyebrow">INTELLIGENT IoT ASSISTANT</div>
+            <h3 class="ai-box-title">AI Smart Box</h3>
+          </div>
+        </div>
+        <div class="ai-header-right">
+          <div class="ai-status-indicator">
+            <span class="ai-status-dot"></span>
+            <span id="aiStatusText">AI Sẵn sàng</span>
+          </div>
+          <button type="button" onclick="refreshAiDiagnostics()" style="font-size:12px; padding:6px 12px;">
+            ↻ Cập nhật AI
+          </button>
+        </div>
+      </div>
+
+      <div class="ai-box-grid">
+        <!-- Cột trái: AI Diagnostics & Analytics -->
+        <div class="ai-diag-col">
+          <div class="ai-insight-card">
+            <div class="ai-insight-top">
+              <span class="ai-insight-tag">⚡ Phân tích tức thì</span>
+              <span class="muted" style="font-size:11px;" id="aiInsightTime">Vừa xong</span>
+            </div>
+            <div class="ai-insight-body" id="aiInsightSummary">
+              Đang phân tích thông số thời gian và cảm biến nhiệt độ LM35...
+            </div>
+            <button onclick="askAiQuestion('Hãy phân tích chi tiết nhiệt độ và cho tôi gợi ý bảo vệ sức khỏe.')" style="width:100%; font-size:12px; padding:8px;">
+              🔍 Yêu cầu AI phân tích sâu hơn
+            </button>
+          </div>
+
+          <div class="ai-diag-metrics">
+            <div class="ai-metric-item">
+              <div class="ai-metric-label">Đánh giá cảm giác nhiệt</div>
+              <div class="ai-metric-val" id="aiComfortVal" style="color:#08a878;">Lý tưởng</div>
+            </div>
+            <div class="ai-metric-item">
+              <div class="ai-metric-label">Xu hướng biến thiên</div>
+              <div class="ai-metric-val" id="aiTrendVal" style="color:#0788d1;">Ổn định</div>
+            </div>
+            <div class="ai-metric-item">
+              <div class="ai-metric-label">Đồng hồ RTC DS1307</div>
+              <div class="ai-metric-val" id="aiRtcVal" style="color:#172b43;">Chuẩn I2C</div>
+            </div>
+            <div class="ai-metric-item">
+              <div class="ai-metric-label">Mô hình AI vận hành</div>
+              <div class="ai-metric-val" id="aiModelVal" style="color:#6366f1;">Smart AI Engine</div>
+            </div>
+          </div>
+
+          <div class="ai-advice-box">
+            <div class="ai-advice-icon">💡</div>
+            <div id="aiAdviceText">
+              Nhiệt độ phòng được duy trì ổn định. Khuyến khích mở thoáng không gian hoặc đặt chế độ quạt nhẹ để lưu thông không khí.
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: Khung hội thoại AI Box trực tiếp -->
+        <div class="ai-chat-col">
+          <div class="ai-chat-header">
+            <div class="ai-chat-header-title">
+              <span>✦</span> Trò chuyện cùng Trợ lý AI Box
+            </div>
+            <button type="button" onclick="clearAiChat()" style="padding:4px 8px; font-size:11px;">
+              Làm sạch
+            </button>
+          </div>
+
+          <div class="ai-messages" id="aiMessages" role="log" aria-live="polite">
+            <div class="ai-msg assistant">Xin chào! Tôi là Trợ lý AI Box trong hệ thống Smart Digital Clock. Tôi có thể giải đáp thông số cảm biến LM35, đồng hồ RTC DS1307 và phân tích xu hướng nhiệt độ cho bạn.</div>
+          </div>
+
+          <div class="ai-typing-indicator" id="aiTypingIndicator">
+            <span>✦ AI đang suy nghĩ</span>
+            <div class="ai-dots">
+              <div class="ai-dot"></div>
+              <div class="ai-dot"></div>
+              <div class="ai-dot"></div>
+            </div>
+          </div>
+
+          <!-- Gợi ý câu hỏi nhanh -->
+          <div class="ai-quick-chips">
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Đánh giá nhiệt độ hiện tại có an toàn không?')">🌡️ Nhiệt độ hiện tại</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Phân tích xu hướng nhiệt độ các mẫu đo gần nhất')">📈 Xu hướng nhiệt độ</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Kiểm tra trạng thái RTC DS1307 và ESP8266')">⚙️ Kiểm tra phần cứng</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Cho tôi lời khuyên tối ưu không gian sống và tiết kiệm điện')">💡 Lời khuyên tối ưu</button>
+          </div>
+
+          <!-- Form nhập câu hỏi -->
+          <form class="ai-form" id="aiForm">
+            <input type="text" class="ai-input" id="aiInput" placeholder="Nhập câu hỏi cho AI Box (ví dụ: 'Nhiệt độ thế nào?')..." autocomplete="off" required>
+            <button type="submit" class="ai-send-btn" id="aiSendBtn">
+              <span>Gửi</span>
+              <span>➤</span>
+            </button>
+          </form>
+        </div>
+      </div>
     </article>
   </section>
 </main>
 
-<footer>Smart Digital Clock & Environment Monitor System · ESP8266 Local Web Server</footer>
+<!-- Floating Popup Chat (giữ đồng bộ tiện dụng) -->
+<section class="chat-panel" id="chatPanel" aria-label="Trò chuyện với trợ lý" hidden>
+  <div class="chat-header">
+    <div class="chat-heading">
+      <div class="chat-avatar" aria-hidden="true">✦</div>
+      <div>
+        <div class="chat-title">Trợ lý AI Box</div>
+        <div class="chat-subtitle">Trợ lý AI trực tuyến · dữ liệu dashboard</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button class="chat-close" type="button" onclick="scrollToAiBox()" title="Xem AI Box đầy đủ trên trang" style="font-size:14px; padding:4px 8px;">⤢</button>
+      <button class="chat-close" id="chatClose" type="button" aria-label="Đóng chat">×</button>
+    </div>
+  </div>
+  <div class="chat-messages" id="chatMessages" role="log" aria-live="polite">
+    <div class="chat-message assistant">Xin chào! Tôi có thể giúp bạn xem giờ, nhiệt độ và phân tích dữ liệu đồng hồ thông minh.</div>
+  </div>
+  <div class="chat-suggestions" aria-label="Câu hỏi gợi ý">
+    <button type="button" onclick="askAiQuestion('Nhiệt độ hiện tại là bao nhiêu?')">Nhiệt độ hiện tại</button>
+    <button type="button" onclick="askAiQuestion('Trạng thái hệ thống thế nào?')">Trạng thái hệ thống</button>
+  </div>
+  <form class="chat-form" id="chatForm">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Nhập câu hỏi..." autocomplete="off" aria-label="Nhập câu hỏi cho trợ lý" required>
+    <button class="chat-send" type="submit" aria-label="Gửi tin nhắn">Gửi</button>
+  </form>
+</section>
+
+<!-- Floating Launcher Button -->
+<button class="chat-launcher" id="chatLauncher" type="button" aria-label="Mở AI Box" title="Mở AI Smart Box">✦</button>
+
+<footer>Smart Digital Clock & Environment Monitor System · ESP8266 Local Web Server with AI Box</footer>
 
 <script>
 let demo = true;
 let temp = 28.5;
 let readings = [];
 
-function updateClock() {
-  const now = new Date();
-  const time = now.toLocaleTimeString('vi-VN', {hour12:false});
-  document.getElementById('clock').textContent = time;
-  document.getElementById('topTime').textContent = time;
-  document.getElementById('date').textContent =
-    now.toLocaleDateString('vi-VN', {
-      weekday:'long', day:'numeric', month:'long', year:'numeric'
-    });
+// Đồng bộ tin nhắn vào cả AI Box và Floating Popup
+function addChatMessage(message, sender) {
+  // Thêm vào AI Box
+  const aiBoxContainer = document.getElementById('aiMessages');
+  if (aiBoxContainer) {
+    const bubble = document.createElement('div');
+    bubble.className = `ai-msg ${sender}`;
+    bubble.textContent = message;
+    aiBoxContainer.appendChild(bubble);
+    bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Thêm vào Floating Modal nếu có
+  const chatMessages = document.getElementById('chatMessages');
+  if (chatMessages) {
+    const modalBubble = document.createElement('div');
+    modalBubble.className = `chat-message ${sender}`;
+    modalBubble.textContent = message;
+    chatMessages.appendChild(modalBubble);
+    modalBubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
+// Hiệu ứng cuộn và làm nổi bật AI Box khi bấm nút Launcher
+function scrollToAiBox() {
+  const aiBoxSection = document.getElementById('aiBoxSection');
+  const aiBoxPanel = document.getElementById('aiBoxPanel');
+  const aiInput = document.getElementById('aiInput');
+  if (aiBoxSection) {
+    aiBoxSection.scrollIntoView({ behavior: 'smooth' });
+    if (aiBoxPanel) {
+      aiBoxPanel.classList.add('highlight');
+      setTimeout(() => aiBoxPanel.classList.remove('highlight'), 1800);
+    }
+    if (aiInput) {
+      setTimeout(() => aiInput.focus(), 400);
+    }
+  }
+}
+
+// Xử lý gửi tin nhắn tới AI (với Fallback thông minh chạy cả khi offline)
+async function sendChatMessage(message) {
+  const question = (message || '').trim();
+  if (!question) return;
+
+  addChatMessage(question, 'user');
+
+  const aiInput = document.getElementById('aiInput');
+  const aiSendBtn = document.getElementById('aiSendBtn');
+  const chatInput = document.getElementById('chatInput');
+  const typingIndicator = document.getElementById('aiTypingIndicator');
+
+  if (aiInput) aiInput.disabled = true;
+  if (aiSendBtn) aiSendBtn.disabled = true;
+  if (chatInput) chatInput.disabled = true;
+  if (typingIndicator) typingIndicator.classList.add('active');
+
+  const contextPayload = {
+    time: document.getElementById('clock')?.textContent || '',
+    date: document.getElementById('date')?.textContent || '',
+    temperature: document.getElementById('temperature')?.textContent || String(temp),
+    systemStatus: document.getElementById('system')?.textContent || 'ONLINE',
+    mode: demo ? 'Simulation' : 'Device',
+    readings: readings.map(r => ({ time: r.time, temperature: r.temp }))
+  };
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: question,
+        context: contextPayload
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || 'Yêu cầu tới máy chủ AI thất bại.');
+    }
+
+    const result = await response.json();
+    if (typeof result.reply !== 'string' || !result.reply.trim()) {
+      throw new Error('Dịch vụ AI trả về dữ liệu không hợp lệ.');
+    }
+
+    addChatMessage(result.reply, 'assistant');
+  } catch (error) {
+    console.warn('Lỗi kết nối /api/chat, chuyển sang phân tích thông minh tại trình duyệt:', error);
+    // Trình duyệt tự giải đáp khi máy chủ node chưa bật (Double click index.html)
+    const clientFallbackReply = getClientSideFallback(question, contextPayload);
+    addChatMessage(clientFallbackReply, 'assistant');
+  } finally {
+    if (aiInput) {
+      aiInput.disabled = false;
+      aiInput.value = '';
+      aiInput.focus();
+    }
+    if (aiSendBtn) aiSendBtn.disabled = false;
+    if (chatInput) {
+      chatInput.disabled = false;
+      chatInput.value = '';
+    }
+    if (typingIndicator) typingIndicator.classList.remove('active');
+  }
+}
+
+// Hàm AI fallback trực tiếp trên client để luôn phản hồi mượt mà
+function getClientSideFallback(question, ctx) {
+  const q = question.toLowerCase();
+  const currentTemp = parseFloat(ctx.temperature) || temp;
+
+  if (q.includes('nhiệt độ') || q.includes('nóng') || q.includes('lạnh')) {
+    let feel = currentTemp < 20 ? 'hơi lạnh' : currentTemp <= 29 ? 'thoáng mát và lý tưởng' : 'khá nóng';
+    return `[AI Box] Nhiệt độ hiện tại là ${currentTemp}°C (${feel}). Cảm biến LM35 đang gửi tín hiệu liên tục.`;
+  }
+  if (q.includes('xu hướng') || q.includes('lịch sử') || q.includes('đồ thị')) {
+    const samples = readings.length;
+    return `[AI Trend] Đã thu thập ${samples} mẫu đo nhiệt độ gần nhất. Nhiệt độ dao động quanh ${currentTemp}°C.`;
+  }
+  if (q.includes('giờ') || q.includes('thời gian') || q.includes('rtc')) {
+    return `[AI Clock] Thời gian hệ thống ghi nhận từ RTC DS1307: ${ctx.time}, ${ctx.date}.`;
+  }
+  if (q.includes('lời khuyên') || q.includes('tối ưu')) {
+    return `[AI Advice] Nhiệt độ phòng ${currentTemp}°C: Nên duy trì thông gió tự nhiên để tiết kiệm năng lượng.`;
+  }
+  return `Chào bạn! Tôi là Trợ lý AI Box. Hiện tại nhiệt độ phòng là ${currentTemp}°C, đồng hồ RTC DS1307 hoạt động ổn định.`;
+}
+
+function askAiQuestion(promptText) {
+  void sendChatMessage(promptText);
+}
+
+function clearAiChat() {
+  const container = document.getElementById('aiMessages');
+  if (container) {
+    container.innerHTML = `
+      <div class="ai-msg assistant">Đoạn hội thoại đã được làm mới. Tôi sẵn sàng giải đáp thắc mắc về hệ thống!</div>
+    `;
+  }
+}
+
+// Cập nhật thông tin chẩn đoán thông minh tức thì trong AI Box
+async function refreshAiDiagnostics() {
+  const currentTemp = parseFloat(document.getElementById('temperature')?.textContent) || temp;
+  const timeNow = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+  const timeElem = document.getElementById('aiInsightTime');
+  if (timeElem) timeElem.textContent = timeNow;
+
+  let comfort = 'Lý tưởng';
+  let comfortColor = '#08a878';
+  let advice = 'Nhiệt độ phòng lý tưởng cho sinh hoạt và học tập. Không cần can thiệp làm mát bổ sung.';
+  let trendText = 'Ổn định';
+  let trendColor = '#0788d1';
+
+  if (currentTemp < 20) {
+    comfort = 'Khá lạnh';
+    comfortColor = '#0788d1';
+    advice = 'Nhiệt độ hơi thấp. Nên điều chỉnh không gian ấm hơn để đảm bảo sức khỏe.';
+  } else if (currentTemp > 33) {
+    comfort = 'Cảnh báo nóng';
+    comfortColor = '#e77d30';
+    advice = 'Nhiệt độ phòng vượt ngưỡng 33°C! Nên kích hoạt quạt thông gió hoặc điều hòa nhiệt độ.';
+  }
+
+  if (readings.length >= 2) {
+    const first = readings[0].temp;
+    const last = readings[readings.length - 1].temp;
+    const diff = last - first;
+    if (diff > 0.4) {
+      trendText = `Tăng (+${diff.toFixed(1)}°C)`;
+      trendColor = '#e77d30';
+    } else if (diff < -0.4) {
+      trendText = `Giảm (${diff.toFixed(1)}°C)`;
+      trendColor = '#08a878';
+    }
+  }
+
+  // Cập nhật giao diện Diagnostics
+  const summaryElem = document.getElementById('aiInsightSummary');
+  if (summaryElem) {
+    summaryElem.textContent = `Cảm biến LM35 ghi nhận ${currentTemp.toFixed(1)}°C (${comfort}). Xu hướng: ${trendText}. RTC DS1307 chuẩn xác.`;
+  }
+
+  const comfortElem = document.getElementById('aiComfortVal');
+  if (comfortElem) {
+    comfortElem.textContent = comfort;
+    comfortElem.style.color = comfortColor;
+  }
+
+  const trendElem = document.getElementById('aiTrendVal');
+  if (trendElem) {
+    trendElem.textContent = trendText;
+    trendElem.style.color = trendColor;
+  }
+
+  const adviceElem = document.getElementById('aiAdviceText');
+  if (adviceElem) {
+    adviceElem.textContent = advice;
+  }
+}
+
+// Đồng hồ thời gian thực
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('vi-VN', { hour12: false });
+  const clockElem = document.getElementById('clock');
+  const topTimeElem = document.getElementById('topTime');
+  const dateElem = document.getElementById('date');
+
+  if (clockElem) clockElem.textContent = time;
+  if (topTimeElem) topTimeElem.textContent = time;
+  if (dateElem) {
+    dateElem.textContent = now.toLocaleDateString('vi-VN', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+}
+
+// Tạo mẫu đo nhiệt độ mới
 function newSample() {
   temp = Math.max(20, Math.min(38, temp + (Math.random() - .5) * 2));
-  document.getElementById('temperature').textContent = temp.toFixed(1);
-  document.getElementById('updated').textContent =
-    new Date().toLocaleTimeString('vi-VN', {hour12:false});
+  const tempElem = document.getElementById('temperature');
+  const updatedElem = document.getElementById('updated');
+
+  if (tempElem) tempElem.textContent = temp.toFixed(1);
+  if (updatedElem) updatedElem.textContent = new Date().toLocaleTimeString('vi-VN', { hour12: false });
 
   readings.push({
-    time: new Date().toLocaleTimeString('vi-VN', {hour12:false}),
+    time: new Date().toLocaleTimeString('vi-VN', { hour12: false }),
     temp: temp
   });
   readings = readings.slice(-8);
+
   renderReadings();
+  refreshAiDiagnostics();
 }
 
 function renderReadings() {
-  document.getElementById('chart').innerHTML = readings.map(r => {
-    const height = Math.max(12, Math.min(100, r.temp * 2.2));
-    return `<div class="bar" title="${r.temp.toFixed(1)} °C"
-      style="height:${height}%"></div>`;
-  }).join('');
+  const chart = document.getElementById('chart');
+  if (chart) {
+    chart.innerHTML = readings.map(r => {
+      const height = Math.max(12, Math.min(100, r.temp * 2.2));
+      return `<div class="bar" title="${r.temp.toFixed(1)} °C" style="height:${height}%"></div>`;
+    }).join('');
+  }
 
-  document.getElementById('history').innerHTML =
-    readings.slice().reverse().slice(0,5).map(r =>
-      `<tr><td>${r.time}</td>
-      <td>${r.temp.toFixed(1)} °C</td>
-      <td>${demo ? 'Simulation' : 'ESP8266'}</td></tr>`
+  const history = document.getElementById('history');
+  if (history) {
+    history.innerHTML = readings.slice().reverse().slice(0, 5).map(r =>
+      `<tr><td>${r.time}</td><td>${r.temp.toFixed(1)} °C</td><td>${demo ? 'Simulation' : 'ESP8266'}</td></tr>`
     ).join('');
+  }
 }
 
 function toggleMode() {
   demo = !demo;
-  document.getElementById('modeButton').textContent =
-    demo ? '◉ Simulation Mode' : '◉ Device Mode';
-  document.getElementById('status').textContent =
-    demo ? '● Simulation running' : '● Device mode selected';
-  document.getElementById('system').textContent =
-    demo ? 'ONLINE' : 'WAITING';
-  document.getElementById('systemInfo').textContent =
-    demo ? 'Local monitoring dashboard' : 'Device API not connected yet';
-  document.getElementById('wifi').textContent =
-    demo ? 'Simulation' : 'Not connected';
+  document.getElementById('modeButton').textContent = demo ? '◉ Simulation Mode' : '◉ Device Mode';
+  document.getElementById('status').textContent = demo ? '● Simulation running' : '● Device mode selected';
+  document.getElementById('system').textContent = demo ? 'ONLINE' : 'WAITING';
+  document.getElementById('systemInfo').textContent = demo ? 'Local monitoring dashboard' : 'Device API not connected yet';
+  document.getElementById('wifi').textContent = demo ? 'Simulation' : 'Not connected';
+  refreshAiDiagnostics();
 }
 
-updateClock();
-for (let i = 0; i < 6; i++) newSample();
-setInterval(updateClock, 1000);
-setInterval(() => {
-  if (demo) newSample();
-}, 5000);
+// Kiểm tra trạng thái AI Server
+async function checkAiServerStatus() {
+  try {
+    const res = await fetch('/api/status');
+    if (res.ok) {
+      const data = await res.json();
+      const statusText = document.getElementById('aiStatusText');
+      const modelVal = document.getElementById('aiModelVal');
+      if (statusText) statusText.textContent = data.aiConfigured ? 'OpenAI Live' : 'AI Engine Ready';
+      if (modelVal) modelVal.textContent = data.aiConfigured ? data.aiModel : 'Smart AI Engine';
+    }
+  } catch (_e) {
+    // Chế độ client offline
+    const statusText = document.getElementById('aiStatusText');
+    if (statusText) statusText.textContent = 'AI Offline Client';
+  }
+}
+
+// Event Listeners cho AI Box và Chat Popup
+document.addEventListener('DOMContentLoaded', () => {
+  // Submit AI Form trong AI Box
+  const aiForm = document.getElementById('aiForm');
+  if (aiForm) {
+    aiForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const input = document.getElementById('aiInput');
+      if (input && input.value.trim()) {
+        const val = input.value;
+        input.value = '';
+        void sendChatMessage(val);
+      }
+    });
+  }
+
+  // Floating Chat Controls
+  const chatLauncher = document.getElementById('chatLauncher');
+  const chatPanel = document.getElementById('chatPanel');
+  const chatClose = document.getElementById('chatClose');
+  const chatForm = document.getElementById('chatForm');
+
+  if (chatLauncher) {
+    chatLauncher.addEventListener('click', () => {
+      if (chatPanel) {
+        const isHidden = chatPanel.hidden;
+        chatPanel.hidden = !isHidden;
+        if (isHidden) {
+          const input = document.getElementById('chatInput');
+          if (input) setTimeout(() => input.focus(), 100);
+        }
+      } else {
+        scrollToAiBox();
+      }
+    });
+  }
+
+  if (chatClose && chatPanel) {
+    chatClose.addEventListener('click', () => {
+      chatPanel.hidden = true;
+    });
+  }
+
+  if (chatForm) {
+    chatForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const input = document.getElementById('chatInput');
+      if (input && input.value.trim()) {
+        const val = input.value;
+        input.value = '';
+        void sendChatMessage(val);
+      }
+    });
+  }
+
+  // Khởi tạo đồng hồ và mẫu đo ban đầu
+  updateClock();
+  for (let i = 0; i < 6; i++) newSample();
+  setInterval(updateClock, 1000);
+  setInterval(() => {
+    if (demo) newSample();
+  }, 5000);
+
+  checkAiServerStatus();
+});
 </script>
 </body>
 </html>
