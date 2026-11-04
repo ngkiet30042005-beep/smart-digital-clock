@@ -481,6 +481,12 @@ th { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
 }
 .ai-box-title { margin: 3px 0 0; font-size: 19px; color: #0f172a; font-weight: 750; }
+.ai-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .ai-status-indicator {
   display: inline-flex;
   align-items: center;
@@ -492,6 +498,12 @@ th { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
+  transition: all 0.25s ease;
+}
+.ai-status-indicator.is-off {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #64748b;
 }
 .ai-status-dot {
   width: 8px;
@@ -499,11 +511,129 @@ th { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform
   border-radius: 50%;
   background: #10b981;
   animation: pulseDot 2s infinite;
+  transition: all 0.25s ease;
+}
+.ai-status-indicator.is-off .ai-status-dot {
+  background: #94a3b8;
+  animation: none;
 }
 @keyframes pulseDot {
   0% { transform: scale(0.95); opacity: 0.8; }
   50% { transform: scale(1.2); opacity: 1; }
   100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Công tắc Bật/Tắt AI Smart Box */
+.ai-switch-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+.ai-switch-control:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+.ai-switch-control input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.ai-slider {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background-color: #cbd5e1;
+  border-radius: 20px;
+  transition: background-color 0.25s ease;
+}
+.ai-slider::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease;
+}
+.ai-switch-control input:checked + .ai-slider {
+  background-color: #10b981;
+}
+.ai-switch-control input:checked + .ai-slider::before {
+  transform: translateX(16px);
+}
+.ai-toggle-text {
+  font-size: 11.5px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+}
+.ai-switch-control.is-active .ai-toggle-text {
+  color: #059669;
+}
+.ai-switch-control.is-off .ai-toggle-text {
+  color: #64748b;
+}
+
+/* AI Disabled Panel & Standby Placeholder */
+.ai-box-panel.ai-disabled {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+.ai-box-panel.ai-disabled .ai-badge-icon {
+  background: #94a3b8;
+  box-shadow: none;
+  filter: grayscale(1);
+}
+.ai-off-placeholder {
+  margin-top: 20px;
+  padding: 38px 24px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+.ai-off-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.ai-off-title {
+  font-size: 17px;
+  font-weight: 750;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+.ai-off-desc {
+  max-width: 520px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #64748b;
+  margin-bottom: 18px;
+}
+.chat-launcher.is-off {
+  background: #64748b;
+  box-shadow: 0 4px 14px rgba(100, 116, 139, 0.35);
+  opacity: 0.8;
+  filter: grayscale(0.5);
 }
 
 /* AI Grid: Left (PCCC Diagnostics) - Right (Interactive Chat) */
@@ -961,24 +1091,44 @@ footer {
     <article class="panel ai-box-panel" id="aiBoxPanel">
       <div class="ai-box-header">
         <div class="ai-header-left">
-          <div class="ai-badge-icon">✦</div>
+          <div class="ai-badge-icon" id="aiBadgeIcon">✦</div>
           <div>
             <div class="eyebrow">INTELLIGENT FIRE SAFETY & VISION</div>
             <h3 class="ai-box-title">AI Smart Box - Trợ Lý Báo Cháy & Giám Sát</h3>
           </div>
         </div>
         <div class="ai-header-right">
-          <div class="ai-status-indicator">
-            <span class="ai-status-dot"></span>
+          <!-- Công tắc Bật/Tắt AI Smart Box -->
+          <label class="ai-switch-control is-active" id="aiSwitchControl" title="Bật hoặc Tắt tính năng AI Smart Box">
+            <input type="checkbox" id="aiBoxToggle" checked onchange="toggleAiBoxState(this.checked)">
+            <span class="ai-slider"></span>
+            <span class="ai-toggle-text" id="aiToggleText">AI ĐANG BẬT</span>
+          </label>
+
+          <div class="ai-status-indicator" id="aiStatusIndicator">
+            <span class="ai-status-dot" id="aiStatusDot"></span>
             <span id="aiStatusText">AI Sẵn sàng 24/7</span>
           </div>
-          <button type="button" onclick="refreshAiFireAnalysis()" style="font-size:12px; padding:6px 12px;">
+
+          <button type="button" id="aiRefreshBtn" onclick="refreshAiFireAnalysis()" style="font-size:12px; padding:6px 12px;" title="Chẩn đoán lại an toàn PCCC">
             ↻ Chẩn đoán lại
           </button>
         </div>
       </div>
 
-      <div class="ai-box-grid">
+      <!-- Trạng thái tạm dừng khi AI Box bị tắt -->
+      <div class="ai-off-placeholder" id="aiOffPlaceholder" style="display: none;">
+        <div class="ai-off-icon">⏸️</div>
+        <div class="ai-off-title">AI Smart Box Đang Tạm Dừng Hoạt Động</div>
+        <div class="ai-off-desc">
+          Tính năng tự động phân tích rủi ro hỏa hoạn LM35, chẩn đoán AI Vision và Trợ lý trò chuyện khẩn cấp đã tạm tắt để tối ưu hóa tài nguyên. Các cơ chế đo nhiệt, chuông báo cháy vật lý và đồng hồ RTC vẫn hoạt động 24/7.
+        </div>
+        <button type="button" class="btn-primary" onclick="setAiBoxState(true)" style="padding: 9px 20px; font-size: 13.5px;">
+          ⚡ Kích hoạt Bật AI Smart Box
+        </button>
+      </div>
+
+      <div class="ai-box-grid" id="aiBoxGrid">
         <!-- Cột trái: Chẩn đoán an toàn PCCC tự động -->
         <div class="ai-diag-col">
           <div class="ai-insight-card">
@@ -1537,8 +1687,94 @@ function toggleSystemMode() {
 }
 
 // =========================================================
-// AI SMART BOX - CHAT & CHẨN ĐOÁN PCCC
+// AI SMART BOX - QUẢN LÝ BẬT / TẮT & CHAT PCCC
 // =========================================================
+let isAiBoxEnabled = true;
+
+function initAiBoxState() {
+  try {
+    const saved = localStorage.getItem('ai_box_enabled');
+    if (saved !== null) {
+      isAiBoxEnabled = saved === 'true';
+    }
+  } catch (e) {
+    console.warn('Không thể đọc localStorage:', e);
+  }
+  applyAiBoxState(isAiBoxEnabled);
+}
+
+function toggleAiBoxState(checked) {
+  setAiBoxState(checked);
+}
+
+function setAiBoxState(enabled) {
+  isAiBoxEnabled = Boolean(enabled);
+  try {
+    localStorage.setItem('ai_box_enabled', String(isAiBoxEnabled));
+  } catch (e) {
+    console.warn('Không thể lưu trạng thái vào localStorage:', e);
+  }
+  applyAiBoxState(isAiBoxEnabled);
+}
+
+function applyAiBoxState(enabled) {
+  const toggle = document.getElementById('aiBoxToggle');
+  const switchCtrl = document.getElementById('aiSwitchControl');
+  const toggleText = document.getElementById('aiToggleText');
+  const statusInd = document.getElementById('aiStatusIndicator');
+  const statusText = document.getElementById('aiStatusText');
+  const panel = document.getElementById('aiBoxPanel');
+  const offPlaceholder = document.getElementById('aiOffPlaceholder');
+  const grid = document.getElementById('aiBoxGrid');
+  const refreshBtn = document.getElementById('aiRefreshBtn');
+  const launcher = document.getElementById('chatLauncher');
+
+  if (toggle) toggle.checked = enabled;
+
+  if (enabled) {
+    if (switchCtrl) {
+      switchCtrl.classList.remove('is-off');
+      switchCtrl.classList.add('is-active');
+    }
+    if (toggleText) toggleText.textContent = 'AI ĐANG BẬT';
+    if (statusInd) statusInd.classList.remove('is-off');
+    if (statusText) statusText.textContent = 'AI Sẵn sàng 24/7';
+    if (panel) panel.classList.remove('ai-disabled');
+    if (offPlaceholder) offPlaceholder.style.display = 'none';
+    if (grid) grid.style.display = 'grid';
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+      refreshBtn.style.opacity = '1';
+      refreshBtn.style.cursor = 'pointer';
+    }
+    if (launcher) {
+      launcher.classList.remove('is-off');
+      launcher.title = 'Mở Trợ lý AI Báo Cháy';
+    }
+    refreshAiFireAnalysis();
+  } else {
+    if (switchCtrl) {
+      switchCtrl.classList.remove('is-active');
+      switchCtrl.classList.add('is-off');
+    }
+    if (toggleText) toggleText.textContent = 'AI ĐÃ TẮT';
+    if (statusInd) statusInd.classList.add('is-off');
+    if (statusText) statusText.textContent = 'AI Đã Tắt (Nghỉ)';
+    if (panel) panel.classList.add('ai-disabled');
+    if (offPlaceholder) offPlaceholder.style.display = 'flex';
+    if (grid) grid.style.display = 'none';
+    if (refreshBtn) {
+      refreshBtn.disabled = true;
+      refreshBtn.style.opacity = '0.5';
+      refreshBtn.style.cursor = 'not-allowed';
+    }
+    if (launcher) {
+      launcher.classList.add('is-off');
+      launcher.title = 'AI Smart Box đang tắt - Nhấn để mở';
+    }
+  }
+}
+
 function scrollToAiBox() {
   const sec = document.getElementById('aiBoxSection');
   const panel = document.getElementById('aiBoxPanel');
@@ -1549,7 +1785,7 @@ function scrollToAiBox() {
       panel.classList.add('highlight');
       setTimeout(() => panel.classList.remove('highlight'), 1800);
     }
-    if (input) setTimeout(() => input.focus(), 300);
+    if (isAiBoxEnabled && input) setTimeout(() => input.focus(), 300);
   }
 }
 
@@ -1564,6 +1800,10 @@ function addAiMessage(msg, sender) {
 }
 
 async function sendAiQuestion(msg) {
+  if (!isAiBoxEnabled) {
+    alert('AI Smart Box hiện đang tắt. Vui lòng bật lại công tắc AI Box ở thanh tiêu đề để tiếp tục!');
+    return;
+  }
   const question = (msg || '').trim();
   if (!question) return;
 
@@ -1633,6 +1873,10 @@ function getClientSideFireResponse(q, ctx) {
 }
 
 function askAiQuestion(prompt) {
+  if (!isAiBoxEnabled) {
+    alert('AI Smart Box hiện đang tắt. Vui lòng bật lại công tắc AI Box ở thanh tiêu đề để tiếp tục!');
+    return;
+  }
   void sendAiQuestion(prompt);
 }
 
@@ -1647,6 +1891,7 @@ function clearAiChat() {
 
 // Cập nhật thông tin chẩn đoán thông minh tức thì
 async function refreshAiFireAnalysis() {
+  if (!isAiBoxEnabled) return;
   const timeElem = document.getElementById('aiInsightTime');
   if (timeElem) timeElem.textContent = new Date().toLocaleTimeString('vi-VN', { hour12: false });
 
@@ -1696,6 +1941,7 @@ async function refreshAiFireAnalysis() {
 
 // Khởi chạy khi load trang
 document.addEventListener('DOMContentLoaded', () => {
+  initAiBoxState();
   updateClock();
   setInterval(updateClock, 1000);
 

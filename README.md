@@ -29,6 +29,7 @@ Dự án IoT kết hợp giữa **Đồng hồ thời gian thực (RTC DS1307)**
    - Bảng nhật ký ghi lại chi tiết các mốc cảnh báo nhiệt độ.
 
 5. **AI Smart Box chuyên gia PCCC & An toàn Môi trường**:
+   - **Công tắc Bật/Tắt AI Box (On/Off Toggle Switch)**: Cho phép người dùng chủ động bật hoặc tạm dừng toàn bộ mô-đun AI Box (phân tích tự động, chẩn đoán LM35, hỏi đáp chat) ngay tại tiêu đề panel hoặc từ giao diện chờ. Trạng thái bật/tắt được tự động lưu vào bộ nhớ trình duyệt (localStorage).
    - Chẩn đoán mức độ rủi ro cháy nổ tự động (Safe / Warning / Danger).
    - Tư vấn hướng dẫn thoát hiểm 4 bước khẩn cấp khi xảy ra hỏa hoạn.
    - Hỗ trợ hỏi đáp thông minh qua OpenAI GPT-4o-mini hoặc Fallback AI Engine nội bộ (hoạt động 100% kể cả khi chưa có API key).
