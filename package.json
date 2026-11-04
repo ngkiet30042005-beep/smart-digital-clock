@@ -1,7 +1,7 @@
 {
-  "name": "smart-digital-clock",
-  "version": "1.0.0",
-  "description": "Smart Digital Clock with IoT Dashboard and AI Box",
+  "name": "smart-thermal-fire-alarm-clock",
+  "version": "2.0.0",
+  "description": "Smart Thermal-Sensing Fire Alarm Clock with Integrated Camera & AI Vision Dashboard",
   "type": "module",
   "main": "server.mjs",
   "scripts": {
@@ -13,4 +13,3 @@
     "openai": "^4.52.0"
   }
 }
-

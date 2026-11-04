@@ -3,228 +3,492 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Digital Clock | IoT Dashboard & AI Box</title>
+<title>Smart Fire Alarm Clock & AI Camera Vision | IoT Dashboard</title>
 <style>
 * { box-sizing: border-box; }
+:root {
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --bg-main: #f0f4f9;
+  --surface: #ffffff;
+  --border: #d7e2ee;
+  --text-main: #0f1e36;
+  --text-muted: #64748b;
+  --danger: #ef4444;
+  --danger-bg: #fee2e2;
+  --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+  --safe: #10b981;
+  --safe-bg: #d1fae5;
+}
 body {
   margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  color: #172b43;
-  background: #edf3f8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  background: var(--bg-main);
   scroll-behavior: smooth;
+  line-height: 1.5;
 }
 header {
-  background: white;
-  padding: 18px 26px;
+  background: var(--surface);
+  padding: 16px 26px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #dce6ef;
+  border-bottom: 1px solid var(--border);
   gap: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.brand { display: flex; align-items: center; gap: 13px; }
+.brand { display: flex; align-items: center; gap: 14px; }
 .logo {
-  background: #0788d1;
+  background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
   color: white;
-  padding: 12px 16px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
 }
-h1 { margin: 0; font-size: 21px; }
-.sub { color: #71839a; font-size: 12px; margin-top: 5px; }
+h1 { margin: 0; font-size: 20px; font-weight: 750; color: #0f172a; }
+.sub { color: var(--text-muted); font-size: 12px; margin-top: 3px; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
 button {
-  padding: 10px 14px;
-  background: white;
-  border: 1px solid #dbe5ef;
-  color: #0788d1;
+  padding: 9px 15px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--primary);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: all 0.2s ease;
 }
-button:hover {
-  background: #f0f7fd;
-  border-color: #0788d1;
+button:hover { background: #f8fafc; border-color: var(--primary); }
+button.btn-danger {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
 }
-main { padding: 28px; max-width: 1500px; margin: auto; }
-.eyebrow {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #71839a;
-  font-weight: bold;
+button.btn-danger:hover {
+  background: #fecaca;
+  border-color: #ef4444;
 }
-.intro {
-  display: flex;
-  justify-content: space-between;
+button.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+button.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+main { padding: 26px; max-width: 1520px; margin: auto; }
+
+/* Alert Banner khi có báo cháy */
+.fire-alarm-banner {
+  display: none;
+  background: linear-gradient(90deg, #b91c1c, #ef4444);
+  color: white;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
   align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
+  justify-content: space-between;
+  animation: strobeAlert 1.2s infinite ease-in-out;
 }
-h2 { font-size: 28px; margin: 12px 0 8px; }
-.muted { color: #71839a; font-size: 13px; }
-.status { color: #08a878; font-size: 12px; font-weight: 600; }
+.fire-alarm-banner.active { display: flex; }
+@keyframes strobeAlert {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.008); opacity: 0.92; box-shadow: 0 8px 30px rgba(239, 68, 68, 0.65); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.alarm-banner-text { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 16px; }
+.alarm-banner-icon { font-size: 28px; animation: bounce 0.8s infinite; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+/* Cards Section */
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 .card, .panel {
-  background: white;
-  border: 1px solid #dce6ef;
-  border-radius: 13px;
-  padding: 23px;
-  box-shadow: 0 2px 5px #23374d05;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
 }
-.card-top { display: flex; justify-content: space-between; }
-.metric { font-size: 35px; font-weight: 750; margin: 16px 0 8px; }
-.blue { color: #0788d1; }
-.orange { color: #e77d30; }
-.green { color: #08a878; }
+.card-top { display: flex; justify-content: space-between; align-items: center; }
+.metric { font-size: 34px; font-weight: 800; margin: 14px 0 6px; letter-spacing: -0.5px; }
+.muted { color: var(--text-muted); font-size: 12.5px; }
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.blue { color: var(--primary); }
+.orange { color: var(--warning); }
+.red { color: var(--danger); }
+.green { color: var(--safe); }
+
+/* Thermal Gauge Mini */
+.thermal-gauge {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.thermal-gauge-fill {
+  height: 100%;
+  width: 35%;
+  background: linear-gradient(90deg, #10b981 0%, #f59e0b 60%, #ef4444 100%);
+  transition: width 0.4s ease;
+}
+
+/* Layout 2 cột lớn: Bảng nhiệt độ/đồng hồ & Camera */
 .layout {
   display: grid;
-  grid-template-columns: 1.1fr .9fr;
+  grid-template-columns: 1fr 1.05fr;
   gap: 22px;
+  margin-bottom: 24px;
 }
-h3 { font-size: 17px; margin: 12px 0 20px; }
+
+/* Panel 1: Digital Clock & Thermal Overview */
 .clock-box {
-  background: linear-gradient(135deg,#edf8ff,#f9fbfd);
-  border: 1px solid #dbeaf5;
+  background: linear-gradient(135deg, #f8fafc 0%, #edf4fc 100%);
+  border: 1px solid #dce8f5;
   border-radius: 12px;
   text-align: center;
-  padding: 32px 10px;
+  padding: 28px 12px;
   margin: 16px 0;
+  position: relative;
+  overflow: hidden;
 }
 .clock {
-  font-size: clamp(35px,5vw,58px);
-  font-weight: 750;
-  color: #0788d1;
+  font-size: clamp(36px, 4.2vw, 54px);
+  font-weight: 850;
+  color: var(--primary);
   letter-spacing: 2px;
-  margin: 12px 0;
+  margin: 8px 0;
+  font-variant-numeric: tabular-nums;
 }
-.date { color: #71839a; font-size: 13px; }
+.clock.danger-state { color: var(--danger); animation: pulseDanger 1s infinite; }
+@keyframes pulseDanger { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+.date { color: var(--text-muted); font-size: 13.5px; }
+
 .details {
   display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-top: 16px;
 }
 .detail {
-  background: #f5f8fb;
-  border-radius: 9px;
-  padding: 14px;
-  color: #71839a;
+  background: #f8fafc;
+  border: 1px solid #e7edf3;
+  border-radius: 10px;
+  padding: 13px;
   font-size: 11px;
+  color: var(--text-muted);
 }
 .detail strong {
   display: block;
-  color: #172b43;
-  font-size: 14px;
-  margin-top: 8px;
+  color: var(--text-main);
+  font-size: 13.5px;
+  margin-top: 6px;
 }
-.chart {
-  height: 180px;
+
+/* Thanh trượt cài đặt ngưỡng nhiệt độ */
+.threshold-controller {
+  margin-top: 18px;
+  background: #fafbfc;
+  border: 1px solid #e5ebf1;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.threshold-top {
   display: flex;
-  align-items: end;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.threshold-val {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+input[type=range] {
+  width: 100%;
+  accent-color: #ef4444;
+  cursor: pointer;
+}
+
+/* Action Buttons dưới Clock */
+.thermal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+/* Panel 2: Live Camera & AI Vision Feed */
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.camera-viewport {
+  position: relative;
+  background: #090d16;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1e293b;
+  transition: border-color 0.3s ease;
+}
+.camera-viewport.alert-border {
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+#cameraFeed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#simCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.camera-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #38bdf8;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+.hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hud-badge {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 4px 8px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f8fafc;
+}
+.hud-badge.danger {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(185, 28, 28, 0.6);
+  animation: strobeAlert 0.8s infinite;
+}
+.hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.camera-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border: 1px dashed rgba(56, 189, 248, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.camera-crosshair::before, .camera-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(56, 189, 248, 0.6);
+}
+.camera-crosshair::before { top: 21px; left: -10px; width: 64px; height: 1px; }
+.camera-crosshair::after { top: -10px; left: 21px; width: 1px; height: 64px; }
+
+/* Camera Controls */
+.camera-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.camera-mode-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-main);
+  background: white;
+  font-family: inherit;
+  outline: none;
+}
+
+/* Snapshot Gallery */
+.snapshot-gallery {
+  margin-top: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.snapshot-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.snapshot-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.snapshot-thumb {
+  width: 80px;
+  height: 52px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex: 0 0 auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.snapshot-thumb:hover { transform: scale(1.05); }
+
+/* Thermal History & Event Log */
+.history-section {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 22px;
+  margin-bottom: 26px;
+}
+.chart-box {
+  background: repeating-linear-gradient(to bottom, white 0, white 39px, #f1f5f9 40px, white 41px);
+  border-bottom: 1px solid var(--border);
+  height: 170px;
+  display: flex;
+  align-items: flex-end;
   justify-content: space-around;
-  gap: 12px;
-  padding: 18px 12px 0;
-  border-bottom: 1px solid #dce6ef;
-  background: repeating-linear-gradient(
-    to bottom, white 0, white 43px, #edf2f7 44px, white 45px
-  );
+  padding: 12px 10px 0;
+  gap: 10px;
 }
 .bar {
   flex: 1;
-  max-width: 42px;
-  background: linear-gradient(#32b4ef,#0788d1);
+  max-width: 44px;
+  background: linear-gradient(#38bdf8, #0284c7);
   border-radius: 6px 6px 0 0;
-  min-height: 12px;
-  transition: height .3s;
+  min-height: 14px;
+  transition: height 0.3s ease, background 0.3s ease;
 }
+.bar.hot { background: linear-gradient(#fbbf24, #f59e0b); }
+.bar.danger { background: linear-gradient(#f87171, #ef4444); }
 .legend {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  color: #71839a;
-  font-size: 11px;
+  color: var(--text-muted);
+  font-size: 11.5px;
 }
 table {
-  border-collapse: collapse;
   width: 100%;
-  margin-top: 20px;
-  font-size: 12px;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-top: 10px;
 }
 th, td {
-  padding: 12px 5px;
+  padding: 10px 6px;
   text-align: left;
-  border-bottom: 1px solid #e8eef4;
+  border-bottom: 1px solid #eef2f6;
 }
-th { color: #71839a; font-size: 10px; }
+th { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
 
-/* =========================================================
-   AI BOX STYLES (TRỌNG TÂM: AI BOX TÍCH HỢP CHO DASHBOARD)
-   ========================================================= */
-.ai-box-section {
-  margin-top: 26px;
-}
+/* AI SMART BOX CHO HỆ THỐNG BÁO CHÁY & CAMERA */
+.ai-box-section { margin-bottom: 30px; }
 .ai-box-panel {
   background: white;
-  border: 1px solid #d2e4f3;
+  border: 1px solid #cbd5e1;
   border-radius: 14px;
   padding: 24px;
-  box-shadow: 0 4px 18px rgba(7, 136, 209, 0.08);
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.08);
   position: relative;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .ai-box-panel.highlight {
-  border-color: #0788d1;
-  box-shadow: 0 0 0 3px rgba(7, 136, 209, 0.25), 0 8px 24px rgba(7, 136, 209, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25), 0 8px 24px rgba(2, 132, 199, 0.15);
 }
 .ai-box-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #eef3f8;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #edf2f7;
   flex-wrap: wrap;
   gap: 12px;
 }
-.ai-header-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+.ai-header-left { display: flex; align-items: center; gap: 14px; }
 .ai-badge-icon {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0788d1 0%, #00b4d8 100%);
+  background: linear-gradient(135deg, #0284c7 0%, #ef4444 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  box-shadow: 0 4px 12px rgba(7, 136, 209, 0.28);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
 }
-.ai-box-title {
-  margin: 4px 0 0;
-  font-size: 20px;
-  color: #172b43;
-}
-.ai-header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.ai-box-title { margin: 3px 0 0; font-size: 19px; color: #0f172a; font-weight: 750; }
 .ai-status-indicator {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 6px 14px;
-  background: #eafaf4;
-  border: 1px solid #b7ebd9;
-  color: #08a878;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #059669;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
@@ -233,55 +497,39 @@ th { color: #71839a; font-size: 10px; }
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #08a878;
-  box-shadow: 0 0 0 0 rgba(8, 168, 120, 0.7);
+  background: #10b981;
   animation: pulseDot 2s infinite;
 }
 @keyframes pulseDot {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 168, 120, 0.7); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(8, 168, 120, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 168, 120, 0); }
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
 }
 
-/* AI Grid: Left (Diagnostics) - Right (Interactive Chat) */
+/* AI Grid: Left (PCCC Diagnostics) - Right (Interactive Chat) */
 .ai-box-grid {
   display: grid;
-  grid-template-columns: 1fr 1.35fr;
-  gap: 24px;
-  margin-top: 22px;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 22px;
+  margin-top: 20px;
 }
-
-/* Cột trái: AI Diagnostics & Insights */
-.ai-diag-col {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.ai-diag-col { display: flex; flex-direction: column; gap: 15px; }
 .ai-insight-card {
-  background: linear-gradient(135deg, #f0f7ff 0%, #f7fbfe 100%);
-  border: 1px solid #cfe5f7;
+  background: linear-gradient(135deg, #f0f9ff 0%, #fef2f2 100%);
+  border: 1px solid #bae6fd;
   border-radius: 12px;
   padding: 16px 18px;
 }
-.ai-insight-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
+.ai-insight-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .ai-insight-tag {
   font-size: 11px;
-  font-weight: 700;
-  color: #0788d1;
+  font-weight: 750;
+  color: #0369a1;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
-.ai-insight-body {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: #243a52;
-  margin-bottom: 12px;
-}
+.ai-insight-body { font-size: 13.5px; line-height: 1.6; color: #1e293b; margin-bottom: 10px; }
+
 .ai-diag-metrics {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -289,65 +537,44 @@ th { color: #71839a; font-size: 10px; }
 }
 .ai-metric-item {
   background: #f8fafc;
-  border: 1px solid #e7edf3;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 12px;
 }
-.ai-metric-label {
-  font-size: 11px;
-  color: #71839a;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.ai-metric-val {
-  font-size: 14px;
-  font-weight: 700;
-  color: #172b43;
-  margin-top: 4px;
-}
+.ai-metric-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+.ai-metric-val { font-size: 14px; font-weight: 750; color: #0f172a; margin-top: 4px; }
+
 .ai-advice-box {
-  background: #fbfbf6;
-  border: 1px solid #f2edd2;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
   border-radius: 10px;
-  padding: 14px 16px;
+  padding: 14px;
   font-size: 12.5px;
   line-height: 1.5;
-  color: #5d4a13;
+  color: #92400e;
   display: flex;
   gap: 10px;
-  align-items: flex-start;
-}
-.ai-advice-icon {
-  font-size: 18px;
-  line-height: 1;
 }
 
-/* Cột phải: Khung hội thoại AI Box */
+/* Chat Column */
 .ai-chat-col {
   display: flex;
   flex-direction: column;
   background: #f8fafc;
-  border: 1px solid #e2eaf1;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   overflow: hidden;
   height: 480px;
 }
 .ai-chat-header {
-  padding: 12px 18px;
-  background: #ffffff;
-  border-bottom: 1px solid #e6eef5;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-.ai-chat-header-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #253b53;
-  display: flex;
   align-items: center;
-  gap: 6px;
 }
+.ai-chat-header-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .ai-messages {
   flex: 1;
   overflow-y: auto;
@@ -368,357 +595,367 @@ th { color: #71839a; font-size: 10px; }
 .ai-msg.assistant {
   align-self: flex-start;
   background: white;
-  border: 1px solid #e2eaf0;
+  border: 1px solid #e2e8f0;
   border-top-left-radius: 4px;
-  color: #1e3347;
+  color: #1e293b;
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 .ai-msg.user {
   align-self: flex-end;
-  background: #0788d1;
+  background: var(--primary);
   color: white;
   border-top-right-radius: 4px;
-  box-shadow: 0 2px 6px rgba(7, 136, 209, 0.2);
 }
 .ai-typing-indicator {
   display: none;
   align-self: flex-start;
   background: white;
-  border: 1px solid #e2eaf0;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 8px 14px;
   font-size: 12px;
-  color: #71839a;
+  color: var(--text-muted);
   align-items: center;
   gap: 6px;
 }
 .ai-typing-indicator.active { display: flex; }
-.ai-dots {
-  display: inline-flex;
-  gap: 4px;
-}
+.ai-dots { display: inline-flex; gap: 4px; }
 .ai-dot {
   width: 5px;
   height: 5px;
-  background: #0788d1;
+  background: var(--primary);
   border-radius: 50%;
   animation: bounceDot 1.4s infinite ease-in-out both;
 }
 .ai-dot:nth-child(1) { animation-delay: -0.32s; }
 .ai-dot:nth-child(2) { animation-delay: -0.16s; }
-@keyframes bounceDot {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
-}
+@keyframes bounceDot { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-/* Câu hỏi gợi ý nhanh */
+/* Quick Chips */
 .ai-quick-chips {
-  padding: 8px 14px;
+  padding: 8px 12px;
   display: flex;
-  gap: 8px;
+  gap: 7px;
   overflow-x: auto;
-  background: #f1f6fa;
-  border-top: 1px solid #e7edf3;
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
 }
 .ai-chip {
   flex: 0 0 auto;
-  padding: 6px 12px;
-  font-size: 11.5px;
+  padding: 5px 11px;
+  font-size: 11px;
   font-weight: 500;
   border-radius: 20px;
   background: white;
-  border: 1px solid #d5e3ef;
-  color: #0788d1;
+  border: 1px solid #cbd5e1;
+  color: var(--primary);
   cursor: pointer;
   transition: all 0.15s ease;
 }
-.ai-chip:hover {
-  background: #0788d1;
-  color: white;
-  border-color: #0788d1;
-}
+.ai-chip:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-/* Input Form */
+/* Form Chat */
 .ai-form {
   display: flex;
   gap: 8px;
   padding: 12px 14px;
   background: white;
-  border-top: 1px solid #e6eef5;
+  border-top: 1px solid #e2e8f0;
 }
 .ai-input {
   flex: 1;
-  padding: 11px 14px;
-  border: 1px solid #d5e3ef;
-  border-radius: 9px;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
   font-size: 13px;
-  font-family: inherit;
-  color: #172b43;
   outline: none;
-  transition: border-color 0.2s;
+  font-family: inherit;
 }
-.ai-input:focus {
-  border-color: #0788d1;
-  box-shadow: 0 0 0 2px rgba(7, 136, 209, 0.18);
-}
+.ai-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.18); }
 .ai-send-btn {
-  padding: 0 18px;
-  background: #0788d1;
+  padding: 0 16px;
+  background: var(--primary);
   color: white;
   border: 0;
-  border-radius: 9px;
-  font-size: 13px;
+  border-radius: 8px;
   font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   cursor: pointer;
-  transition: background 0.2s;
-}
-.ai-send-btn:hover {
-  background: #0675b5;
-}
-.ai-send-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
-/* =========================================================
-   FLOATING CHAT LAUNCHER & PANEL (GIỮ ĐỒNG BỘ ĐỂ TIỆN DỤNG)
-   ========================================================= */
+/* Floating Launcher Button */
 .chat-launcher {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 20;
+  z-index: 40;
   width: 58px;
   height: 58px;
-  padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #0788d1;
+  background: linear-gradient(135deg, #ef4444 0%, #0284c7 100%);
   color: white;
-  font-size: 25px;
-  box-shadow: 0 8px 24px #0788d14d;
+  font-size: 26px;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s;
 }
-.chat-launcher:hover { background: #0675b5; transform: scale(1.05); }
-.chat-panel {
-  position: fixed;
-  right: 24px;
-  bottom: 94px;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  width: min(390px, calc(100vw - 32px));
-  height: min(520px, calc(100vh - 125px));
-  min-height: 340px;
-  overflow: hidden;
-  background: white;
-  border: 1px solid #dce6ef;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px #172b4326;
-}
-.chat-panel[hidden] { display: none; }
-.chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 17px;
-  color: white;
-  background: #0788d1;
-}
-.chat-heading { display: flex; align-items: center; gap: 11px; }
-.chat-avatar {
-  display: grid;
-  width: 37px;
-  height: 37px;
-  place-items: center;
-  background: #ffffff2b;
-  border-radius: 50%;
-}
-.chat-title { font-size: 14px; font-weight: 700; }
-.chat-subtitle { margin-top: 3px; color: #e4f5ff; font-size: 11px; }
-.chat-close {
-  padding: 5px 9px;
-  border-color: #ffffff55;
-  color: white;
-  background: transparent;
-  font-size: 18px;
-}
-.chat-messages {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  padding: 16px;
-  background: #f7f9fc;
-}
-.chat-message {
-  max-width: 88%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-.chat-message.assistant {
-  align-self: flex-start;
-  color: #253b53;
-  background: white;
-  border: 1px solid #e5ebf1;
-  border-top-left-radius: 4px;
-}
-.chat-message.user {
-  align-self: flex-end;
-  color: white;
-  background: #0788d1;
-  border-top-right-radius: 4px;
-}
-.chat-suggestions {
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  padding: 0 14px 12px;
-  background: #f7f9fc;
-}
-.chat-suggestions button {
-  flex: 0 0 auto;
-  padding: 7px 10px;
-  color: #0788d1;
-  background: white;
-  font-size: 11px;
-}
-.chat-form {
-  display: flex;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid #e8eef4;
-}
-.chat-input {
-  min-width: 0;
-  flex: 1;
-  padding: 10px 12px;
-  border: 1px solid #dbe5ef;
-  border-radius: 9px;
-  color: #172b43;
-  font: inherit;
-}
-.chat-input:focus { outline: 2px solid #0788d155; border-color: #0788d1; }
-.chat-send { color: white; background: #0788d1; border-color: #0788d1; }
+.chat-launcher:hover { transform: scale(1.08); }
 
 footer {
   padding: 24px;
   text-align: center;
-  color: #71839a;
-  font-size: 12px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  border-top: 1px solid var(--border);
+  background: white;
 }
 
-@media(max-width:960px) {
-  .ai-box-grid { grid-template-columns: 1fr; }
-  .ai-chat-col { height: 420px; }
+@media(max-width: 1080px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .layout, .history-section, .ai-box-grid { grid-template-columns: 1fr; }
+  .ai-chat-col { height: 400px; }
 }
-@media(max-width:800px) {
-  header { flex-wrap: wrap; }
-  main { padding: 16px; }
-  .cards, .layout { grid-template-columns: 1fr; }
-  .intro { align-items: flex-start; flex-direction: column; }
-}
-@media(max-width:480px) {
-  .chat-launcher { right: 16px; bottom: 16px; }
-  .chat-panel { right: 16px; bottom: 86px; }
+@media(max-width: 640px) {
+  header { flex-direction: column; align-items: stretch; }
+  .cards { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+
 <header>
   <div class="brand">
-    <div class="logo">◷</div>
+    <div class="logo">🔥</div>
     <div>
-      <h1>Smart Digital Clock</h1>
-      <div class="sub">IoT Environment Monitoring Dashboard & AI Box</div>
+      <h1>Smart Thermal Fire Alarm Clock</h1>
+      <div class="sub">Đồng hồ cảm ứng nhiệt báo cháy & Giám sát Camera AI (IoT ESP32-CAM)</div>
     </div>
   </div>
-  <button id="modeButton" onclick="toggleMode()">◉ Simulation Mode</button>
+  <div class="header-actions">
+    <button type="button" id="sirenToggleBtn" onclick="toggleSirenMute()">
+      <span id="sirenIcon">🔊</span> <span id="sirenStatus">Còi: Sẵn sàng</span>
+    </button>
+    <button type="button" class="btn-danger" onclick="triggerSimulatedFire()">
+      🚨 Test Báo Cháy (65°C)
+    </button>
+    <button type="button" id="modeBtn" onclick="toggleSystemMode()">
+      ◉ Mô phỏng
+    </button>
+  </div>
 </header>
 
 <main>
-  <!-- Header Overview -->
-  <section class="intro">
-    <div>
-      <div class="eyebrow">WORKSPACE / OVERVIEW</div>
-      <h2>A smarter way to monitor.</h2>
-      <div class="muted">Everything you need to monitor time, environment and AI insights.</div>
+  <!-- Banner Cảnh báo cháy cấp 1 -->
+  <div class="fire-alarm-banner" id="fireAlarmBanner">
+    <div class="alarm-banner-text">
+      <span class="alarm-banner-icon">🚨</span>
+      <div>
+        <div style="font-size:18px;">CẢNH BÁO BÁO CHÁY TỰ ĐỘNG KÍCH HOẠT!</div>
+        <div style="font-weight:400; font-size:13.5px;" id="alarmBannerDetail">Nhiệt độ cảm biến LM35 vượt ngưỡng an toàn! Còi báo động đang kêu và Camera đã lưu ảnh hiện trường.</div>
+      </div>
     </div>
-    <div class="status" id="status">● Simulation running</div>
-  </section>
+    <div style="display:flex; gap:10px;">
+      <button type="button" class="btn-primary" onclick="resetFireAlarm()" style="background:white; color:#b91c1c; border-color:white;">
+        🔕 Tắt Báo Động & Đặt Lại
+      </button>
+    </div>
+  </div>
 
-  <!-- Metric Cards -->
+  <!-- Cards Overview -->
   <section class="cards">
+    <!-- Card 1: Đồng hồ số RTC DS1307 -->
     <article class="card">
       <div class="card-top">
-        <span class="muted">Digital Clock</span><span class="blue">◷</span>
+        <span class="muted">Digital Clock RTC</span>
+        <span class="blue">⏱️</span>
       </div>
       <div class="metric blue" id="topTime">--:--:--</div>
-      <div class="muted">DS1307 Real-Time Clock</div>
+      <div class="muted">Module DS1307 · I2C Bus Sync</div>
     </article>
+
+    <!-- Card 2: Cảm biến nhiệt LM35 -->
     <article class="card">
       <div class="card-top">
-        <span class="muted">Temperature</span><span class="orange">♨</span>
+        <span class="muted">Cảm Biến Nhiệt LM35</span>
+        <span class="orange">♨</span>
       </div>
       <div class="metric orange"><span id="temperature">28.5</span>°C</div>
-      <div class="muted">LM35 Temperature Sensor</div>
+      <div class="muted">Ngưỡng báo động: <strong id="topThreshold">50.0°C</strong></div>
+      <div class="thermal-gauge">
+        <div class="thermal-gauge-fill" id="thermalGaugeFill"></div>
+      </div>
     </article>
+
+    <!-- Card 3: Trạng thái Báo Cháy -->
+    <article class="card" id="fireStatusCard">
+      <div class="card-top">
+        <span class="muted">Trạng Thái Báo Cháy</span>
+        <span id="fireIconBadge" class="green">●</span>
+      </div>
+      <div class="metric green" id="fireStatusText">AN TOÀN</div>
+      <div class="muted" id="fireStatusSub">Không phát hiện nguy cơ nhiệt</div>
+    </article>
+
+    <!-- Card 4: Camera Giám sát AI -->
     <article class="card">
       <div class="card-top">
-        <span class="muted">System Status</span><span class="green">●</span>
+        <span class="muted">Camera Giám Sát AI</span>
+        <span class="blue">📷</span>
       </div>
-      <div class="metric green" style="font-size:28px" id="system">ONLINE</div>
-      <div class="muted" id="systemInfo">Local monitoring dashboard</div>
+      <div class="metric blue" style="font-size:26px;" id="cameraStatusText">LIVE FEED</div>
+      <div class="muted" id="cameraVisionResult">AI Vision: Không có khói / đốm nhiệt</div>
     </article>
   </section>
 
-  <!-- Overview & History Panels -->
+  <!-- Layout 2 Cột: Đồng hồ & Cảm biến (Trái) - Camera AI Giám sát (Phải) -->
   <section class="layout">
+    <!-- Cột trái: Đồng hồ thời gian thực & Bộ cảm biến nhiệt -->
     <article class="panel">
-      <div class="eyebrow">LIVE DEVICE DATA</div>
-      <h3>Digital Clock Overview</h3>
-      <div class="clock-box">
-        <div class="eyebrow">CURRENT TIME</div>
+      <div class="eyebrow">HỆ THỐNG ĐỒNG HỒ & CẢM BIẾN NHIỆT</div>
+      <h3 style="margin: 8px 0 16px;">Đồng Hồ Số & Kiểm Soát Nhiệt Báo Cháy</h3>
+
+      <div class="clock-box" id="clockBox">
+        <div class="eyebrow">RTC DS1307 REAL-TIME CLOCK</div>
         <div class="clock" id="clock">--:--:--</div>
-        <div class="date" id="date"></div>
+        <div class="date" id="date">Đang đồng bộ thời gian...</div>
       </div>
+
       <div class="details">
-        <div class="detail">RTC MODULE<strong id="rtc">DS1307 · Demo</strong></div>
-        <div class="detail">TEMPERATURE SENSOR<strong id="sensor">LM35 · Demo</strong></div>
-        <div class="detail">WI-FI CONNECTION<strong id="wifi">Simulation</strong></div>
-        <div class="detail">LAST UPDATE<strong id="updated">Just now</strong></div>
+        <div class="detail">MODULE ĐỒNG HỒ<strong id="rtcModule">DS1307 · I2C Active</strong></div>
+        <div class="detail">CẢM BIẾN NHIỆT ĐỘ<strong id="sensorModule">LM35 Thermal Sensor</strong></div>
+        <div class="detail">CÒI BÁO CHÁY BUZZER<strong id="buzzerState">Active · Chuẩn bị</strong></div>
+        <div class="detail">CẬP NHẬT GẦN NHẤT<strong id="lastUpdate">Vừa xong</strong></div>
+      </div>
+
+      <!-- Điều chỉnh ngưỡng nhiệt độ báo cháy -->
+      <div class="threshold-controller">
+        <div class="threshold-top">
+          <span>⚙️ Ngưỡng nhiệt kích hoạt còi báo cháy:</span>
+          <span class="threshold-val" id="sliderValDisplay">50 °C</span>
+        </div>
+        <input type="range" id="thresholdSlider" min="35" max="80" step="1" value="50" oninput="updateThreshold(this.value)">
+        <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748b; margin-top:4px;">
+          <span>35°C (Nhạy cao)</span>
+          <span>50°C (Tiêu chuẩn PCCC)</span>
+          <span>80°C (Chịu nhiệt)</span>
+        </div>
+      </div>
+
+      <!-- Nút hành động test -->
+      <div class="thermal-actions">
+        <button type="button" onclick="newSample()">+ Mẫu nhiệt mới</button>
+        <button type="button" onclick="testBuzzerAudio()">🔊 Test Còi Báo Động</button>
+        <button type="button" class="btn-danger" onclick="triggerSimulatedFire()">🔥 Giả lập Hỏa hoạn (65°C)</button>
+        <button type="button" onclick="resetFireAlarm()">↺ Đặt lại An toàn (28°C)</button>
+      </div>
+    </article>
+
+    <!-- Cột phải: Camera Giám sát Tích Hợp (Webcam thật / ESP32-CAM / Giả lập) -->
+    <article class="panel camera-container">
+      <div class="card-top">
+        <div>
+          <div class="eyebrow">INTEGRATED CAMERA & AI VISION</div>
+          <h3 style="margin: 8px 0 0;">Camera Giám Sát Hiện Trường</h3>
+        </div>
+        <div>
+          <select class="camera-mode-select" id="cameraSourceSelect" onchange="changeCameraSource(this.value)">
+            <option value="sim">Simulation / Radar Nhiệt</option>
+            <option value="webcam">Webcam Thiết Bị Thật</option>
+            <option value="esp32">ESP32-CAM (IP Stream)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Khung Viewport Video -->
+      <div class="camera-viewport" id="cameraViewport" style="margin-top:16px;">
+        <!-- Canvas vẽ giả lập radar nhiệt hoặc stream camera -->
+        <canvas id="simCanvas" width="640" height="360"></canvas>
+        <video id="cameraFeed" autoplay playsinline muted style="display:none;"></video>
+
+        <!-- Lớp HUD giám sát camera -->
+        <div class="camera-hud">
+          <div class="hud-top">
+            <div class="hud-badge" id="hudStatusBadge">
+              <span style="color:#ef4444;">●</span> LIVE REC
+            </div>
+            <div class="hud-badge" id="hudTimestamp">2026-11-04 19:00:00</div>
+          </div>
+
+          <div class="camera-crosshair"></div>
+
+          <div class="hud-bottom">
+            <div>
+              <div style="font-weight:700;">CAM-01 · ESP32-CAM FIRE DETECT</div>
+              <div>FOV: 120° · THERMAL SCAN: ACTIVE</div>
+            </div>
+            <div class="hud-badge" id="hudTempOverlay">
+              TEMP: <span id="hudTempText">28.5</span>°C
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thanh công cụ điều khiển camera -->
+      <div class="camera-toolbar">
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-primary" onclick="captureSnapshot()">
+            📸 Chụp Ảnh Hiện Trường
+          </button>
+          <button type="button" onclick="toggleWebcam()">
+            🎥 Bật / Tắt Webcam
+          </button>
+        </div>
+        <div class="muted" style="font-size:12px;" id="snapshotCountText">
+          Đã lưu 0 ảnh bằng chứng
+        </div>
+      </div>
+
+      <!-- Dải ảnh Snapshot chứng cứ -->
+      <div class="snapshot-gallery">
+        <div class="snapshot-title">📸 Nhật ký ảnh chứng cứ khi báo cháy (Evidence Log)</div>
+        <div class="snapshot-list" id="snapshotList">
+          <div class="muted" style="font-size:12px; padding:10px 0;">Chưa có ảnh chụp cảnh báo nào. Bấm 'Chụp Ảnh Hiện Trường' hoặc kích hoạt báo cháy để tự động lưu ảnh.</div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Lịch sử đo nhiệt & Nhật ký biến cố báo cháy -->
+  <section class="history-section">
+    <article class="panel">
+      <div class="eyebrow">DỮ LIỆU ĐO NHIỆT ĐỘ LIÊN TỤC</div>
+      <h3 style="margin: 8px 0 14px;">Biểu Đồ Nhiệt Độ Môi Trường</h3>
+      <div class="muted">Theo dõi biến thiên nhiệt theo từng chu kỳ lấy mẫu</div>
+      <div class="chart-box" id="chartBox"></div>
+      <div class="legend">
+        <span>Mẫu cũ hơn</span>
+        <span>Mức cảnh báo: Vàng (&gt;40°C) · Đỏ Báo cháy (&gt;50°C)</span>
+        <span>Mẫu mới nhất</span>
       </div>
     </article>
 
     <article class="panel">
-      <div class="eyebrow">ENVIRONMENT MONITORING</div>
-      <h3>Temperature History</h3>
-      <div class="muted">Recent temperature readings</div>
-      <div class="chart" id="chart"></div>
-      <div class="legend"><span>Oldest</span><span>Temperature (°C)</span><span>Latest</span></div>
+      <div class="eyebrow">NHẬT KÝ SỰ KIỆN PCCC</div>
+      <h3 style="margin: 8px 0 14px;">Nhật Ký Cảnh Báo Cháy</h3>
       <table>
-        <thead><tr><th>TIME</th><th>TEMPERATURE</th><th>SOURCE</th></tr></thead>
-        <tbody id="history"></tbody>
+        <thead>
+          <tr>
+            <th>THỜI GIAN</th>
+            <th>NHIỆT ĐỘ</th>
+            <th>TRẠNG THÁI</th>
+            <th>CAMERA AI</th>
+          </tr>
+        </thead>
+        <tbody id="fireHistoryTable"></tbody>
       </table>
-      <div style="margin-top: 15px; display: flex; gap: 10px;">
-        <button onclick="newSample()">+ New Sample</button>
-        <button onclick="scrollToAiBox()" style="background:#edf8ff; border-color:#0788d1;">✦ Mở AI Box</button>
-      </div>
     </article>
   </section>
 
   <!-- =========================================================
-       AI BOX SECTION (KHUNG AI BOX TÍCH HỢP ĐẦY ĐỦ)
+       AI SMART BOX - TRỢ LÝ PCCC & GIÁM SÁT THỜI GIAN THỰC
        ========================================================= -->
   <section class="ai-box-section" id="aiBoxSection">
     <article class="panel ai-box-panel" id="aiBoxPanel">
@@ -726,60 +963,60 @@ footer {
         <div class="ai-header-left">
           <div class="ai-badge-icon">✦</div>
           <div>
-            <div class="eyebrow">INTELLIGENT IoT ASSISTANT</div>
-            <h3 class="ai-box-title">AI Smart Box</h3>
+            <div class="eyebrow">INTELLIGENT FIRE SAFETY & VISION</div>
+            <h3 class="ai-box-title">AI Smart Box - Trợ Lý Báo Cháy & Giám Sát</h3>
           </div>
         </div>
         <div class="ai-header-right">
           <div class="ai-status-indicator">
             <span class="ai-status-dot"></span>
-            <span id="aiStatusText">AI Sẵn sàng</span>
+            <span id="aiStatusText">AI Sẵn sàng 24/7</span>
           </div>
-          <button type="button" onclick="refreshAiDiagnostics()" style="font-size:12px; padding:6px 12px;">
-            ↻ Cập nhật AI
+          <button type="button" onclick="refreshAiFireAnalysis()" style="font-size:12px; padding:6px 12px;">
+            ↻ Chẩn đoán lại
           </button>
         </div>
       </div>
 
       <div class="ai-box-grid">
-        <!-- Cột trái: AI Diagnostics & Analytics -->
+        <!-- Cột trái: Chẩn đoán an toàn PCCC tự động -->
         <div class="ai-diag-col">
           <div class="ai-insight-card">
             <div class="ai-insight-top">
-              <span class="ai-insight-tag">⚡ Phân tích tức thì</span>
+              <span class="ai-insight-tag">⚡ Phân Tích Rủi Ro PCCC Tức Thì</span>
               <span class="muted" style="font-size:11px;" id="aiInsightTime">Vừa xong</span>
             </div>
             <div class="ai-insight-body" id="aiInsightSummary">
-              Đang phân tích thông số thời gian và cảm biến nhiệt độ LM35...
+              Hệ thống đang phân tích tín hiệu cảm biến nhiệt LM35 và luồng hình ảnh camera an ninh...
             </div>
-            <button onclick="askAiQuestion('Hãy phân tích chi tiết nhiệt độ và cho tôi gợi ý bảo vệ sức khỏe.')" style="width:100%; font-size:12px; padding:8px;">
-              🔍 Yêu cầu AI phân tích sâu hơn
+            <button type="button" onclick="askAiQuestion('Hãy hướng dẫn tôi quy trình xử lý khẩn cấp khi có báo cháy!')" style="width:100%; font-size:12px; padding:8px;">
+              🧯 Xem hướng dẫn xử lý khẩn cấp PCCC
             </button>
           </div>
 
           <div class="ai-diag-metrics">
             <div class="ai-metric-item">
-              <div class="ai-metric-label">Đánh giá cảm giác nhiệt</div>
-              <div class="ai-metric-val" id="aiComfortVal" style="color:#08a878;">Lý tưởng</div>
+              <div class="ai-metric-label">Mức độ rủi ro cháy</div>
+              <div class="ai-metric-val" id="aiRiskVal" style="color:#10b981;">An toàn (Safe)</div>
             </div>
             <div class="ai-metric-item">
-              <div class="ai-metric-label">Xu hướng biến thiên</div>
-              <div class="ai-metric-val" id="aiTrendVal" style="color:#0788d1;">Ổn định</div>
+              <div class="ai-metric-label">Xu hướng biến thiên nhiệt</div>
+              <div class="ai-metric-val" id="aiTrendVal" style="color:#0284c7;">Ổn định</div>
             </div>
             <div class="ai-metric-item">
-              <div class="ai-metric-label">Đồng hồ RTC DS1307</div>
-              <div class="ai-metric-val" id="aiRtcVal" style="color:#172b43;">Chuẩn I2C</div>
+              <div class="ai-metric-label">Camera Vision ESP32</div>
+              <div class="ai-metric-val" id="aiCameraVal" style="color:#0f172a;">Hoạt động</div>
             </div>
             <div class="ai-metric-item">
               <div class="ai-metric-label">Mô hình AI vận hành</div>
-              <div class="ai-metric-val" id="aiModelVal" style="color:#6366f1;">Smart AI Engine</div>
+              <div class="ai-metric-val" id="aiModelVal" style="color:#6366f1;">Fire AI Engine</div>
             </div>
           </div>
 
           <div class="ai-advice-box">
-            <div class="ai-advice-icon">💡</div>
+            <div style="font-size:20px; line-height:1;">🛡️</div>
             <div id="aiAdviceText">
-              Nhiệt độ phòng được duy trì ổn định. Khuyến khích mở thoáng không gian hoặc đặt chế độ quạt nhẹ để lưu thông không khí.
+              Nhiệt độ hiện tại trong mức an toàn. Hãy đảm bảo lối thoát hiểm luôn thông thoáng và kiểm tra định kỳ bình chữa cháy tại chỗ.
             </div>
           </div>
         </div>
@@ -788,19 +1025,19 @@ footer {
         <div class="ai-chat-col">
           <div class="ai-chat-header">
             <div class="ai-chat-header-title">
-              <span>✦</span> Trò chuyện cùng Trợ lý AI Box
+              <span>✦</span> Hỏi đáp Trợ lý Báo cháy & Camera AI
             </div>
-            <button type="button" onclick="clearAiChat()" style="padding:4px 8px; font-size:11px;">
+            <button type="button" onclick="clearAiChat()" style="padding:3px 8px; font-size:11px;">
               Làm sạch
             </button>
           </div>
 
           <div class="ai-messages" id="aiMessages" role="log" aria-live="polite">
-            <div class="ai-msg assistant">Xin chào! Tôi là Trợ lý AI Box trong hệ thống Smart Digital Clock. Tôi có thể giải đáp thông số cảm biến LM35, đồng hồ RTC DS1307 và phân tích xu hướng nhiệt độ cho bạn.</div>
+            <div class="ai-msg assistant">Xin chào! Tôi là Trợ lý AI của dự án "Đồng hồ cảm ứng nhiệt báo cháy tích hợp Camera". Tôi liên tục giám sát nhiệt độ cảm biến LM35, đồng hồ RTC DS1307 và hình ảnh camera an ninh để phòng chống hỏa hoạn. Bạn cần hỗ trợ gì?</div>
           </div>
 
           <div class="ai-typing-indicator" id="aiTypingIndicator">
-            <span>✦ AI đang suy nghĩ</span>
+            <span>✦ AI đang phân tích dữ liệu PCCC</span>
             <div class="ai-dots">
               <div class="ai-dot"></div>
               <div class="ai-dot"></div>
@@ -810,18 +1047,17 @@ footer {
 
           <!-- Gợi ý câu hỏi nhanh -->
           <div class="ai-quick-chips">
-            <button type="button" class="ai-chip" onclick="askAiQuestion('Đánh giá nhiệt độ hiện tại có an toàn không?')">🌡️ Nhiệt độ hiện tại</button>
-            <button type="button" class="ai-chip" onclick="askAiQuestion('Phân tích xu hướng nhiệt độ các mẫu đo gần nhất')">📈 Xu hướng nhiệt độ</button>
-            <button type="button" class="ai-chip" onclick="askAiQuestion('Kiểm tra trạng thái RTC DS1307 và ESP8266')">⚙️ Kiểm tra phần cứng</button>
-            <button type="button" class="ai-chip" onclick="askAiQuestion('Cho tôi lời khuyên tối ưu không gian sống và tiết kiệm điện')">💡 Lời khuyên tối ưu</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Hướng dẫn quy trình xử lý khẩn cấp khi có chuông báo cháy')">🚨 Quy trình khi có cháy</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Kiểm tra ngưỡng nhiệt độ báo cháy và trạng thái LM35')">🌡️ Ngưỡng nhiệt an toàn</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Cách camera ESP32-CAM giám sát và chụp ảnh chứng cứ')">📷 Tính năng Camera AI</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Các biện pháp phòng cháy chữa cháy an toàn tại nhà')">🧯 Phòng ngừa cháy nổ</button>
           </div>
 
-          <!-- Form nhập câu hỏi -->
+          <!-- Form gửi câu hỏi -->
           <form class="ai-form" id="aiForm">
-            <input type="text" class="ai-input" id="aiInput" placeholder="Nhập câu hỏi cho AI Box (ví dụ: 'Nhiệt độ thế nào?')..." autocomplete="off" required>
+            <input type="text" class="ai-input" id="aiInput" placeholder="Hỏi AI về nhiệt độ, còi báo cháy, camera hoặc an toàn PCCC..." autocomplete="off" required>
             <button type="submit" class="ai-send-btn" id="aiSendBtn">
-              <span>Gửi</span>
-              <span>➤</span>
+              <span>Gửi ➤</span>
             </button>
           </form>
         </div>
@@ -830,391 +1066,661 @@ footer {
   </section>
 </main>
 
-<!-- Floating Popup Chat (giữ đồng bộ tiện dụng) -->
-<section class="chat-panel" id="chatPanel" aria-label="Trò chuyện với trợ lý" hidden>
-  <div class="chat-header">
-    <div class="chat-heading">
-      <div class="chat-avatar" aria-hidden="true">✦</div>
-      <div>
-        <div class="chat-title">Trợ lý AI Box</div>
-        <div class="chat-subtitle">Trợ lý AI trực tuyến · dữ liệu dashboard</div>
-      </div>
-    </div>
-    <div style="display:flex; gap:6px; align-items:center;">
-      <button class="chat-close" type="button" onclick="scrollToAiBox()" title="Xem AI Box đầy đủ trên trang" style="font-size:14px; padding:4px 8px;">⤢</button>
-      <button class="chat-close" id="chatClose" type="button" aria-label="Đóng chat">×</button>
-    </div>
-  </div>
-  <div class="chat-messages" id="chatMessages" role="log" aria-live="polite">
-    <div class="chat-message assistant">Xin chào! Tôi có thể giúp bạn xem giờ, nhiệt độ và phân tích dữ liệu đồng hồ thông minh.</div>
-  </div>
-  <div class="chat-suggestions" aria-label="Câu hỏi gợi ý">
-    <button type="button" onclick="askAiQuestion('Nhiệt độ hiện tại là bao nhiêu?')">Nhiệt độ hiện tại</button>
-    <button type="button" onclick="askAiQuestion('Trạng thái hệ thống thế nào?')">Trạng thái hệ thống</button>
-  </div>
-  <form class="chat-form" id="chatForm">
-    <input class="chat-input" id="chatInput" type="text" placeholder="Nhập câu hỏi..." autocomplete="off" aria-label="Nhập câu hỏi cho trợ lý" required>
-    <button class="chat-send" type="submit" aria-label="Gửi tin nhắn">Gửi</button>
-  </form>
-</section>
-
 <!-- Floating Launcher Button -->
-<button class="chat-launcher" id="chatLauncher" type="button" aria-label="Mở AI Box" title="Mở AI Smart Box">✦</button>
+<button class="chat-launcher" id="chatLauncher" type="button" onclick="scrollToAiBox()" title="Mở Trợ lý AI Báo Cháy">
+  🔥
+</button>
 
-<footer>Smart Digital Clock & Environment Monitor System · ESP8266 Local Web Server with AI Box</footer>
+<footer>
+  Smart Thermal Fire Alarm Clock & AI Camera Vision System · Vi điều khiển ESP8266 / ESP32-CAM · RTC DS1307 · Cảm biến LM35
+</footer>
 
 <script>
 let demo = true;
-let temp = 28.5;
+let currentTemp = 28.5;
+let alarmThreshold = 50.0;
+let isFireAlarmActive = false;
+let isSirenMuted = false;
 let readings = [];
+let snapshots = [];
+let audioCtx = null;
+let sirenOsc1 = null;
+let sirenOsc2 = null;
+let sirenGain = null;
+let isAudioPlaying = false;
+let cameraMode = 'sim';
+let webcamStream = null;
 
-// Đồng bộ tin nhắn vào cả AI Box và Floating Popup
-function addChatMessage(message, sender) {
-  // Thêm vào AI Box
-  const aiBoxContainer = document.getElementById('aiMessages');
-  if (aiBoxContainer) {
-    const bubble = document.createElement('div');
-    bubble.className = `ai-msg ${sender}`;
-    bubble.textContent = message;
-    aiBoxContainer.appendChild(bubble);
-    bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+// =========================================================
+// WEBCAM & SIMULATION CAMERA VISION
+// =========================================================
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+const video = document.getElementById('cameraFeed');
+let radarAngle = 0;
+
+function drawSimulatedCamera() {
+  if (cameraMode === 'webcam' && webcamStream) {
+    requestAnimationFrame(drawSimulatedCamera);
+    return;
   }
 
-  // Thêm vào Floating Modal nếu có
-  const chatMessages = document.getElementById('chatMessages');
-  if (chatMessages) {
-    const modalBubble = document.createElement('div');
-    modalBubble.className = `chat-message ${sender}`;
-    modalBubble.textContent = message;
-    chatMessages.appendChild(modalBubble);
-    modalBubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  ctx.fillStyle = '#0a0f1d';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Hiệu ứng lưới radar an ninh
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
+  ctx.lineWidth = 1;
+  const step = 40;
+  for (let x = 0; x < canvas.width; x += step) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += step) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+
+  // Quét vòng radar nhiệt
+  radarAngle += 0.03;
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 130, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+  ctx.stroke();
+
+  // Tia quét
+  const targetX = centerX + Math.cos(radarAngle) * 130;
+  const targetY = centerY + Math.sin(radarAngle) * 130;
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.lineTo(targetX, targetY);
+  ctx.strokeStyle = isFireAlarmActive ? 'rgba(239, 68, 68, 0.8)' : 'rgba(56, 189, 248, 0.8)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+
+  // Vẽ mô phỏng đốm nhiệt (Thermal target)
+  if (isFireAlarmActive) {
+    // Khi có hỏa hoạn: Vẽ đốm lửa nhấp nháy đỏ rực
+    const flameX = centerX + 40;
+    const flameY = centerY - 20;
+    const pulseRadius = 35 + Math.sin(Date.now() / 100) * 10;
+
+    const grad = ctx.createRadialGradient(flameX, flameY, 5, flameX, flameY, pulseRadius);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+    grad.addColorStop(0.3, 'rgba(254, 240, 138, 0.8)');
+    grad.addColorStop(0.6, 'rgba(239, 68, 68, 0.8)');
+    grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(flameX, flameY, pulseRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bounding Box AI Vision
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(flameX - 45, flameY - 45, 90, 90);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(flameX - 45, flameY - 65, 120, 20);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px monospace';
+    ctx.fillText('FLAME DETECT: 98%', flameX - 40, flameY - 51);
+  } else {
+    // Trạng thái bình thường: Điểm nhiệt an toàn
+    ctx.fillStyle = 'rgba(16, 185, 129, 0.6)';
+    ctx.beginPath();
+    ctx.arc(centerX - 60, centerY + 30, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.8)';
+    ctx.font = '10px monospace';
+    ctx.fillText('ZONE-A NORMAL', centerX - 50, centerY + 34);
+  }
+
+  requestAnimationFrame(drawSimulatedCamera);
+}
+requestAnimationFrame(drawSimulatedCamera);
+
+async function toggleWebcam() {
+  if (cameraMode === 'webcam') {
+    changeCameraSource('sim');
+    return;
+  }
+  changeCameraSource('webcam');
+}
+
+async function changeCameraSource(source) {
+  cameraMode = source;
+  document.getElementById('cameraSourceSelect').value = source;
+
+  if (source === 'webcam') {
+    try {
+      if (!webcamStream) {
+        webcamStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 360 } });
+      }
+      video.srcObject = webcamStream;
+      video.style.display = 'block';
+      canvas.style.display = 'none';
+      document.getElementById('cameraStatusText').textContent = 'WEBCAM LIVE';
+      document.getElementById('hudStatusBadge').innerHTML = '<span style="color:#10b981;">●</span> WEBCAM ON';
+    } catch (err) {
+      alert('Không thể mở Webcam (vui lòng cấp quyền truy cập Camera trong trình duyệt): ' + err.message);
+      changeCameraSource('sim');
+    }
+  } else if (source === 'esp32') {
+    const ip = prompt('Nhập địa chỉ stream MJPEG của ESP32-CAM (Ví dụ: http://192.168.1.100:81/stream):', 'http://192.168.1.100:81/stream');
+    if (ip) {
+      if (webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+      }
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+      document.getElementById('cameraStatusText').textContent = 'ESP32 STREAM';
+      document.getElementById('hudStatusBadge').innerHTML = '<span style="color:#0284c7;">●</span> ESP32-CAM';
+    } else {
+      changeCameraSource('sim');
+    }
+  } else {
+    // Mode sim
+    if (webcamStream) {
+      webcamStream.getTracks().forEach(t => t.stop());
+      webcamStream = null;
+    }
+    video.style.display = 'none';
+    canvas.style.display = 'block';
+    document.getElementById('cameraStatusText').textContent = 'RADAR SIM';
+    document.getElementById('hudStatusBadge').innerHTML = '<span style="color:#ef4444;">●</span> LIVE REC';
   }
 }
 
-// Hiệu ứng cuộn và làm nổi bật AI Box khi bấm nút Launcher
+// Chụp ảnh hiện trường lưu vào bằng chứng
+function captureSnapshot(reason = 'Thủ công') {
+  const snapCanvas = document.createElement('canvas');
+  snapCanvas.width = 320;
+  snapCanvas.height = 180;
+  const sCtx = snapCanvas.getContext('2d');
+
+  if (cameraMode === 'webcam' && video.videoWidth) {
+    sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+  } else {
+    sCtx.drawImage(canvas, 0, 0, snapCanvas.width, snapCanvas.height);
+  }
+
+  // Thêm watermark ngày giờ và nhiệt độ
+  sCtx.fillStyle = 'rgba(0,0,0,0.6)';
+  sCtx.fillRect(0, snapCanvas.height - 24, snapCanvas.width, 24);
+  sCtx.fillStyle = '#ffffff';
+  sCtx.font = '10px monospace';
+  const timeStr = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+  sCtx.fillText(`${timeStr} | ${currentTemp.toFixed(1)}°C | ${reason}`, 8, snapCanvas.height - 8);
+
+  const dataUrl = snapCanvas.toDataURL('image/jpeg', 0.85);
+  snapshots.unshift({ url: dataUrl, time: timeStr, temp: currentTemp.toFixed(1), reason });
+  snapshots = snapshots.slice(0, 8);
+  renderSnapshots();
+}
+
+function renderSnapshots() {
+  const list = document.getElementById('snapshotList');
+  document.getElementById('snapshotCountText').textContent = `Đã lưu ${snapshots.length} ảnh bằng chứng`;
+  if (!snapshots.length) return;
+
+  list.innerHTML = snapshots.map(s => `
+    <img src="${s.url}" class="snapshot-thumb" title="${s.time} - ${s.temp}°C (${s.reason})" onclick="window.open('${s.url}')">
+  `).join('');
+}
+
+// =========================================================
+// CÒI BÁO ĐỘNG BẰNG WEB AUDIO API (KHÔNG CẦN FILE MP3 NGOÀI)
+// =========================================================
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function startSirenSound() {
+  if (isSirenMuted || isAudioPlaying) return;
+  try {
+    initAudio();
+    isAudioPlaying = true;
+
+    sirenOsc1 = audioCtx.createOscillator();
+    sirenOsc2 = audioCtx.createOscillator();
+    sirenGain = audioCtx.createGain();
+
+    sirenOsc1.type = 'sawtooth';
+    sirenOsc2.type = 'square';
+
+    // Tạo hiệu ứng hụ còi báo cháy (LFO tần số từ 600Hz đến 1100Hz)
+    const now = audioCtx.currentTime;
+    sirenOsc1.frequency.setValueAtTime(650, now);
+    sirenOsc2.frequency.setValueAtTime(800, now);
+
+    // Điều chế tần số liên tục (Wail effect)
+    for (let i = 0; i < 40; i++) {
+      sirenOsc1.frequency.linearRampToValueAtTime(1100, now + i * 1.0 + 0.5);
+      sirenOsc1.frequency.linearRampToValueAtTime(650, now + i * 1.0 + 1.0);
+    }
+
+    sirenGain.gain.setValueAtTime(0.12, now);
+
+    sirenOsc1.connect(sirenGain);
+    sirenOsc2.connect(sirenGain);
+    sirenGain.connect(audioCtx.destination);
+
+    sirenOsc1.start();
+    sirenOsc2.start();
+  } catch (e) {
+    console.warn('Audio siren error:', e);
+  }
+}
+
+function stopSirenSound() {
+  if (!isAudioPlaying) return;
+  try {
+    if (sirenOsc1) { sirenOsc1.stop(); sirenOsc1.disconnect(); sirenOsc1 = null; }
+    if (sirenOsc2) { sirenOsc2.stop(); sirenOsc2.disconnect(); sirenOsc2 = null; }
+    if (sirenGain) { sirenGain.disconnect(); sirenGain = null; }
+  } catch (_e) {}
+  isAudioPlaying = false;
+}
+
+function testBuzzerAudio() {
+  initAudio();
+  if (isAudioPlaying) {
+    stopSirenSound();
+    alert('Đã tắt còi báo động thử nghiệm.');
+  } else {
+    startSirenSound();
+    setTimeout(() => {
+      stopSirenSound();
+    }, 3500);
+  }
+}
+
+function toggleSirenMute() {
+  isSirenMuted = !isSirenMuted;
+  const icon = document.getElementById('sirenIcon');
+  const text = document.getElementById('sirenStatus');
+  if (isSirenMuted) {
+    stopSirenSound();
+    icon.textContent = '🔇';
+    text.textContent = 'Còi: Đã tắt âm';
+  } else {
+    icon.textContent = '🔊';
+    text.textContent = 'Còi: Sẵn sàng';
+  }
+}
+
+// =========================================================
+// LOGIC BÁO CHÁY & CẢM BIẾN NHIỆT
+// =========================================================
+function updateThreshold(val) {
+  alarmThreshold = Number(val);
+  document.getElementById('sliderValDisplay').textContent = `${alarmThreshold} °C`;
+  document.getElementById('topThreshold').textContent = `${alarmThreshold.toFixed(1)}°C`;
+  checkFireCondition();
+}
+
+function triggerSimulatedFire() {
+  currentTemp = 65.5;
+  document.getElementById('temperature').textContent = currentTemp.toFixed(1);
+  newSample(currentTemp, 'Mô phỏng hỏa hoạn');
+}
+
+function resetFireAlarm() {
+  currentTemp = 28.5;
+  document.getElementById('temperature').textContent = currentTemp.toFixed(1);
+  stopSirenSound();
+  newSample(currentTemp, 'Đặt lại an toàn');
+}
+
+function checkFireCondition() {
+  const banner = document.getElementById('fireAlarmBanner');
+  const fireText = document.getElementById('fireStatusText');
+  const fireSub = document.getElementById('fireStatusSub');
+  const fireIcon = document.getElementById('fireIconBadge');
+  const clock = document.getElementById('clock');
+  const cameraViewport = document.getElementById('cameraViewport');
+  const buzzerState = document.getElementById('buzzerState');
+  const cameraVision = document.getElementById('cameraVisionResult');
+  const hudBadge = document.getElementById('hudStatusBadge');
+
+  if (currentTemp >= alarmThreshold) {
+    // TRẠNG THÁI HỎA HOẠN NGUY CẤP
+    if (!isFireAlarmActive) {
+      isFireAlarmActive = true;
+      captureSnapshot('BÁO CHÁY TỰ ĐỘNG');
+      startSirenSound();
+    }
+    banner.classList.add('active');
+    document.getElementById('alarmBannerDetail').textContent = `Cảm biến LM35 đo được ${currentTemp.toFixed(1)}°C (Vượt ngưỡng ${alarmThreshold.toFixed(1)}°C!). Còi báo động đang kích hoạt.`;
+    fireText.textContent = 'BÁO ĐỘNG CHÁY!';
+    fireText.className = 'metric red';
+    fireSub.textContent = '🚨 Nhiệt độ nguy hiểm - Cần xử lý ngay!';
+    fireIcon.textContent = '🔥';
+    fireIcon.className = 'red';
+    clock.classList.add('danger-state');
+    cameraViewport.classList.add('alert-border');
+    buzzerState.textContent = '🚨 KÍCH HOẠT (Hú còi)';
+    buzzerState.style.color = '#ef4444';
+    cameraVision.textContent = '⚠️ PHÁT HIỆN ĐỐM LỬA / KHÓI BẤT THƯỜNG!';
+    hudBadge.className = 'hud-badge danger';
+    hudBadge.innerHTML = '🚨 FIRE ALARM DETECT';
+  } else if (currentTemp >= alarmThreshold - 10) {
+    // CẢNH BÁO NHIỆT ĐỘ TĂNG CAO
+    isFireAlarmActive = false;
+    stopSirenSound();
+    banner.classList.remove('active');
+    fireText.textContent = 'CẢNH BÁO NHIỆT';
+    fireText.className = 'metric orange';
+    fireSub.textContent = `Nhiệt độ ${currentTemp.toFixed(1)}°C tiệm cận ngưỡng báo cháy`;
+    fireIcon.textContent = '▲';
+    fireIcon.className = 'orange';
+    clock.classList.remove('danger-state');
+    cameraViewport.classList.remove('alert-border');
+    buzzerState.textContent = 'Cảnh báo mức nhẹ';
+    buzzerState.style.color = '#f59e0b';
+    cameraVision.textContent = 'Quan sát đốm nhiệt tăng cao';
+    hudBadge.className = 'hud-badge';
+    hudBadge.innerHTML = '<span style="color:#f59e0b;">●</span> WARNING TEMP';
+  } else {
+    // AN TOÀN
+    isFireAlarmActive = false;
+    stopSirenSound();
+    banner.classList.remove('active');
+    fireText.textContent = 'AN TOÀN';
+    fireText.className = 'metric green';
+    fireSub.textContent = 'Không phát hiện nguy cơ nhiệt';
+    fireIcon.textContent = '●';
+    fireIcon.className = 'green';
+    clock.classList.remove('danger-state');
+    cameraViewport.classList.remove('alert-border');
+    buzzerState.textContent = 'Sẵn sàng (Standby)';
+    buzzerState.style.color = '#10b981';
+    cameraVision.textContent = 'AI Vision: Không có khói / đốm nhiệt';
+    hudBadge.className = 'hud-badge';
+    hudBadge.innerHTML = '<span style="color:#ef4444;">●</span> LIVE REC';
+  }
+
+  // Cập nhật thanh nhiệt mini
+  const fillPercent = Math.min(100, Math.max(10, (currentTemp / 80) * 100));
+  document.getElementById('thermalGaugeFill').style.width = `${fillPercent}%`;
+  document.getElementById('hudTempText').textContent = currentTemp.toFixed(1);
+}
+
+// Đồng hồ thời gian thực RTC
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('vi-VN', { hour12: false });
+  document.getElementById('clock').textContent = timeStr;
+  document.getElementById('topTime').textContent = timeStr;
+  document.getElementById('hudTimestamp').textContent = now.toISOString().replace('T', ' ').substring(0, 19);
+
+  document.getElementById('date').textContent = now.toLocaleDateString('vi-VN', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+}
+
+// Tạo mẫu đo nhiệt độ mới
+function newSample(forceTemp = null, reason = 'Chu kỳ tự động') {
+  if (forceTemp !== null) {
+    currentTemp = forceTemp;
+  } else {
+    if (!isFireAlarmActive) {
+      currentTemp = Math.max(22, Math.min(42, currentTemp + (Math.random() - 0.5) * 1.8));
+    }
+  }
+
+  document.getElementById('temperature').textContent = currentTemp.toFixed(1);
+  const nowStr = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+  document.getElementById('lastUpdate').textContent = nowStr;
+
+  readings.push({
+    time: nowStr,
+    temp: currentTemp,
+    isDanger: currentTemp >= alarmThreshold
+  });
+  readings = readings.slice(-10);
+
+  renderThermalChart();
+  renderHistoryTable(reason);
+  checkFireCondition();
+  refreshAiFireAnalysis();
+}
+
+function renderThermalChart() {
+  const box = document.getElementById('chartBox');
+  if (!box) return;
+  box.innerHTML = readings.map(r => {
+    const height = Math.max(12, Math.min(100, (r.temp / 80) * 100));
+    let cls = 'bar';
+    if (r.temp >= alarmThreshold) cls += ' danger';
+    else if (r.temp >= alarmThreshold - 10) cls += ' hot';
+    return `<div class="${cls}" title="${r.time}: ${r.temp.toFixed(1)}°C" style="height:${height}%"></div>`;
+  }).join('');
+}
+
+function renderHistoryTable(reason) {
+  const tbody = document.getElementById('fireHistoryTable');
+  if (!tbody) return;
+  tbody.innerHTML = readings.slice().reverse().slice(0, 5).map(r => {
+    let statusBadge = '<span class="green">● An toàn</span>';
+    if (r.temp >= alarmThreshold) statusBadge = '<span class="red" style="font-weight:700;">🚨 BÁO CHÁY</span>';
+    else if (r.temp >= alarmThreshold - 10) statusBadge = '<span class="orange">▲ Cảnh báo</span>';
+
+    return `<tr>
+      <td>${r.time}</td>
+      <td><strong>${r.temp.toFixed(1)} °C</strong></td>
+      <td>${statusBadge}</td>
+      <td>${r.temp >= alarmThreshold ? '📸 Đã chụp ảnh' : 'Bình thường'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleSystemMode() {
+  demo = !demo;
+  const btn = document.getElementById('modeBtn');
+  if (demo) {
+    btn.textContent = '◉ Mô phỏng';
+  } else {
+    btn.textContent = '◉ ESP32 Thật';
+    alert('Chuyển sang chế độ kết nối phần cứng ESP8266/ESP32 thật. Hệ thống sẽ lắng nghe dữ liệu từ cổng REST/WebSocket.');
+  }
+}
+
+// =========================================================
+// AI SMART BOX - CHAT & CHẨN ĐOÁN PCCC
+// =========================================================
 function scrollToAiBox() {
-  const aiBoxSection = document.getElementById('aiBoxSection');
-  const aiBoxPanel = document.getElementById('aiBoxPanel');
-  const aiInput = document.getElementById('aiInput');
-  if (aiBoxSection) {
-    aiBoxSection.scrollIntoView({ behavior: 'smooth' });
-    if (aiBoxPanel) {
-      aiBoxPanel.classList.add('highlight');
-      setTimeout(() => aiBoxPanel.classList.remove('highlight'), 1800);
+  const sec = document.getElementById('aiBoxSection');
+  const panel = document.getElementById('aiBoxPanel');
+  const input = document.getElementById('aiInput');
+  if (sec) {
+    sec.scrollIntoView({ behavior: 'smooth' });
+    if (panel) {
+      panel.classList.add('highlight');
+      setTimeout(() => panel.classList.remove('highlight'), 1800);
     }
-    if (aiInput) {
-      setTimeout(() => aiInput.focus(), 400);
-    }
+    if (input) setTimeout(() => input.focus(), 300);
   }
 }
 
-// Xử lý gửi tin nhắn tới AI (với Fallback thông minh chạy cả khi offline)
-async function sendChatMessage(message) {
-  const question = (message || '').trim();
+function addAiMessage(msg, sender) {
+  const container = document.getElementById('aiMessages');
+  if (!container) return;
+  const bubble = document.createElement('div');
+  bubble.className = `ai-msg ${sender}`;
+  bubble.textContent = msg;
+  container.appendChild(bubble);
+  bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function sendAiQuestion(msg) {
+  const question = (msg || '').trim();
   if (!question) return;
 
-  addChatMessage(question, 'user');
+  addAiMessage(question, 'user');
 
-  const aiInput = document.getElementById('aiInput');
-  const aiSendBtn = document.getElementById('aiSendBtn');
-  const chatInput = document.getElementById('chatInput');
-  const typingIndicator = document.getElementById('aiTypingIndicator');
+  const input = document.getElementById('aiInput');
+  const btn = document.getElementById('aiSendBtn');
+  const typing = document.getElementById('aiTypingIndicator');
 
-  if (aiInput) aiInput.disabled = true;
-  if (aiSendBtn) aiSendBtn.disabled = true;
-  if (chatInput) chatInput.disabled = true;
-  if (typingIndicator) typingIndicator.classList.add('active');
+  if (input) input.disabled = true;
+  if (btn) btn.disabled = true;
+  if (typing) typing.classList.add('active');
 
-  const contextPayload = {
+  const contextData = {
     time: document.getElementById('clock')?.textContent || '',
     date: document.getElementById('date')?.textContent || '',
-    temperature: document.getElementById('temperature')?.textContent || String(temp),
-    systemStatus: document.getElementById('system')?.textContent || 'ONLINE',
-    mode: demo ? 'Simulation' : 'Device',
+    temperature: currentTemp.toFixed(1),
+    fireStatus: currentTemp >= alarmThreshold ? 'DANGER' : currentTemp >= alarmThreshold - 10 ? 'WARNING' : 'SAFE',
+    alarmThreshold: alarmThreshold,
+    cameraStatus: cameraMode === 'webcam' ? 'Webcam Live' : cameraMode === 'esp32' ? 'ESP32 Stream' : 'Thermal Radar Sim',
     readings: readings.map(r => ({ time: r.time, temperature: r.temp }))
   };
 
   try {
-    const response = await fetch('/api/chat', {
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: question,
-        context: contextPayload
-      })
+      body: JSON.stringify({ message: question, context: contextData })
     });
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error || 'Yêu cầu tới máy chủ AI thất bại.');
-    }
-
-    const result = await response.json();
-    if (typeof result.reply !== 'string' || !result.reply.trim()) {
-      throw new Error('Dịch vụ AI trả về dữ liệu không hợp lệ.');
-    }
-
-    addChatMessage(result.reply, 'assistant');
-  } catch (error) {
-    console.warn('Lỗi kết nối /api/chat, chuyển sang phân tích thông minh tại trình duyệt:', error);
-    // Trình duyệt tự giải đáp khi máy chủ node chưa bật (Double click index.html)
-    const clientFallbackReply = getClientSideFallback(question, contextPayload);
-    addChatMessage(clientFallbackReply, 'assistant');
+    if (!res.ok) throw new Error('Yêu cầu tới máy chủ AI thất bại.');
+    const data = await res.json();
+    addAiMessage(data.reply || 'AI không trả lời được nội dung này.', 'assistant');
+  } catch (err) {
+    console.warn('Lỗi kết nối /api/chat, sử dụng phản hồi cục bộ:', err);
+    // Trình duyệt tự giải đáp khi mở file offline
+    const localReply = getClientSideFireResponse(question, contextData);
+    addAiMessage(localReply, 'assistant');
   } finally {
-    if (aiInput) {
-      aiInput.disabled = false;
-      aiInput.value = '';
-      aiInput.focus();
+    if (input) {
+      input.disabled = false;
+      input.value = '';
+      input.focus();
     }
-    if (aiSendBtn) aiSendBtn.disabled = false;
-    if (chatInput) {
-      chatInput.disabled = false;
-      chatInput.value = '';
-    }
-    if (typingIndicator) typingIndicator.classList.remove('active');
+    if (btn) btn.disabled = false;
+    if (typing) typing.classList.remove('active');
   }
 }
 
-// Hàm AI fallback trực tiếp trên client để luôn phản hồi mượt mà
-function getClientSideFallback(question, ctx) {
-  const q = question.toLowerCase();
-  const currentTemp = parseFloat(ctx.temperature) || temp;
-
-  if (q.includes('nhiệt độ') || q.includes('nóng') || q.includes('lạnh')) {
-    let feel = currentTemp < 20 ? 'hơi lạnh' : currentTemp <= 29 ? 'thoáng mát và lý tưởng' : 'khá nóng';
-    return `[AI Box] Nhiệt độ hiện tại là ${currentTemp}°C (${feel}). Cảm biến LM35 đang gửi tín hiệu liên tục.`;
+function getClientSideFireResponse(q, ctx) {
+  const query = q.toLowerCase();
+  if (query.includes('cháy') || query.includes('quy trình') || query.includes('thoát hiểm')) {
+    return `🚨 [QUY TRÌNH XỬ LÝ KHẨN CẤP KHI CÓ CHÁY]
+1. Hô hoán cho mọi người xung quanh và bấm chuông báo cháy.
+2. Ngắt cầu dao điện tổng khu vực xảy ra sự cố.
+3. Nếu đám cháy nhỏ: Sử dụng bình chữa cháy bột hoặc khí CO2 để dập lửa tại gốc.
+4. Nếu đám cháy lan rộng: Dùng khăn ướt bịt mũi miệng, cúi thấp người men theo tường để thoát ra ngoài theo lối cầu thang bộ.
+5. Gọi ngay cho lực lượng cứu hỏa chuyên nghiệp qua số 114.`;
   }
-  if (q.includes('xu hướng') || q.includes('lịch sử') || q.includes('đồ thị')) {
-    const samples = readings.length;
-    return `[AI Trend] Đã thu thập ${samples} mẫu đo nhiệt độ gần nhất. Nhiệt độ dao động quanh ${currentTemp}°C.`;
+  if (query.includes('nhiệt độ') || query.includes('ngưỡng') || query.includes('lm35')) {
+    return `🌡️ Cảm biến nhiệt độ LM35 đang đo được: ${ctx.temperature}°C. Ngưỡng báo cháy hiện tại là ${ctx.alarmThreshold}°C. Trạng thái: ${ctx.fireStatus === 'DANGER' ? '🚨 VƯỢT NGƯỠNG NGUY HIỂM!' : '✅ Bình thường'}.`;
   }
-  if (q.includes('giờ') || q.includes('thời gian') || q.includes('rtc')) {
-    return `[AI Clock] Thời gian hệ thống ghi nhận từ RTC DS1307: ${ctx.time}, ${ctx.date}.`;
+  if (query.includes('camera') || query.includes('esp32')) {
+    return `📷 Camera giám sát an ninh đang hoạt động ở chế độ: ${ctx.cameraStatus}. Tính năng AI Vision tự động chụp ảnh hiện trường và hiển thị nhãn thời gian từ RTC DS1307.`;
   }
-  if (q.includes('lời khuyên') || q.includes('tối ưu')) {
-    return `[AI Advice] Nhiệt độ phòng ${currentTemp}°C: Nên duy trì thông gió tự nhiên để tiết kiệm năng lượng.`;
-  }
-  return `Chào bạn! Tôi là Trợ lý AI Box. Hiện tại nhiệt độ phòng là ${currentTemp}°C, đồng hồ RTC DS1307 hoạt động ổn định.`;
+  return `Chào bạn! Tôi là Trợ lý AI Báo Cháy. Hiện tại hệ thống đang giám sát nhiệt độ ${ctx.temperature}°C (${ctx.fireStatus === 'DANGER' ? '🚨 CÓ BÁO ĐỘNG' : '✅ An toàn'}). Bạn có câu hỏi nào về an toàn PCCC hoặc thiết bị không?`;
 }
 
-function askAiQuestion(promptText) {
-  void sendChatMessage(promptText);
+function askAiQuestion(prompt) {
+  void sendAiQuestion(prompt);
 }
 
 function clearAiChat() {
   const container = document.getElementById('aiMessages');
   if (container) {
     container.innerHTML = `
-      <div class="ai-msg assistant">Đoạn hội thoại đã được làm mới. Tôi sẵn sàng giải đáp thắc mắc về hệ thống!</div>
+      <div class="ai-msg assistant">Đoạn hội thoại đã được xóa. Tôi sẵn sàng giải đáp các thắc mắc về hệ thống báo cháy và camera an ninh!</div>
     `;
   }
 }
 
-// Cập nhật thông tin chẩn đoán thông minh tức thì trong AI Box
-async function refreshAiDiagnostics() {
-  const currentTemp = parseFloat(document.getElementById('temperature')?.textContent) || temp;
-  const timeNow = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+// Cập nhật thông tin chẩn đoán thông minh tức thì
+async function refreshAiFireAnalysis() {
   const timeElem = document.getElementById('aiInsightTime');
-  if (timeElem) timeElem.textContent = timeNow;
+  if (timeElem) timeElem.textContent = new Date().toLocaleTimeString('vi-VN', { hour12: false });
 
-  let comfort = 'Lý tưởng';
-  let comfortColor = '#08a878';
-  let advice = 'Nhiệt độ phòng lý tưởng cho sinh hoạt và học tập. Không cần can thiệp làm mát bổ sung.';
-  let trendText = 'Ổn định';
-  let trendColor = '#0788d1';
+  const summary = document.getElementById('aiInsightSummary');
+  const riskVal = document.getElementById('aiRiskVal');
+  const trendVal = document.getElementById('aiTrendVal');
+  const advice = document.getElementById('aiAdviceText');
 
-  if (currentTemp < 20) {
-    comfort = 'Khá lạnh';
-    comfortColor = '#0788d1';
-    advice = 'Nhiệt độ hơi thấp. Nên điều chỉnh không gian ấm hơn để đảm bảo sức khỏe.';
-  } else if (currentTemp > 33) {
-    comfort = 'Cảnh báo nóng';
-    comfortColor = '#e77d30';
-    advice = 'Nhiệt độ phòng vượt ngưỡng 33°C! Nên kích hoạt quạt thông gió hoặc điều hòa nhiệt độ.';
+  let risk = 'An toàn (Safe)';
+  let riskColor = '#10b981';
+  let adviceStr = 'Nhiệt độ hiện tại trong mức an toàn. Hãy đảm bảo lối thoát hiểm luôn thông thoáng và kiểm tra định kỳ bình chữa cháy tại chỗ.';
+
+  if (currentTemp >= alarmThreshold) {
+    risk = '🚨 NGUY HIỂM (Danger)';
+    riskColor = '#ef4444';
+    adviceStr = 'NGUY CƠ CHÁY CỰC CAO! Ngắt ngay cầu dao điện, quan sát camera để xác định vị trí cháy và sơ tán theo lối thoát hiểm!';
+    if (summary) summary.textContent = `CẢNH BÁO: Nhiệt độ ${currentTemp.toFixed(1)}°C vượt ngưỡng báo cháy (${alarmThreshold}°C). Còi báo động đã kêu, camera đã chụp ảnh lưu trữ.`;
+  } else if (currentTemp >= alarmThreshold - 10) {
+    risk = '⚠️ Cảnh báo (Warning)';
+    riskColor = '#f59e0b';
+    adviceStr = 'Nhiệt độ phòng tăng bất thường. Cần kiểm tra ngay các thiết bị sinh nhiệt hoặc ổ cắm điện xung quanh.';
+    if (summary) summary.textContent = `Nhiệt độ ${currentTemp.toFixed(1)}°C đang tiệm cận ngưỡng báo cháy. Cần quan sát camera để đề phòng chập cháy.`;
+  } else {
+    if (summary) summary.textContent = `Cảm biến LM35 ghi nhận ${currentTemp.toFixed(1)}°C (Dưới ngưỡng ${alarmThreshold}°C). Camera giám sát hoạt động ổn định.`;
   }
 
+  if (riskVal) { riskVal.textContent = risk; riskVal.style.color = riskColor; }
+  if (advice) advice.textContent = adviceStr;
+
+  // Tính xu hướng
   if (readings.length >= 2) {
-    const first = readings[0].temp;
-    const last = readings[readings.length - 1].temp;
-    const diff = last - first;
-    if (diff > 0.4) {
-      trendText = `Tăng (+${diff.toFixed(1)}°C)`;
-      trendColor = '#e77d30';
-    } else if (diff < -0.4) {
-      trendText = `Giảm (${diff.toFixed(1)}°C)`;
-      trendColor = '#08a878';
-    }
-  }
-
-  // Cập nhật giao diện Diagnostics
-  const summaryElem = document.getElementById('aiInsightSummary');
-  if (summaryElem) {
-    summaryElem.textContent = `Cảm biến LM35 ghi nhận ${currentTemp.toFixed(1)}°C (${comfort}). Xu hướng: ${trendText}. RTC DS1307 chuẩn xác.`;
-  }
-
-  const comfortElem = document.getElementById('aiComfortVal');
-  if (comfortElem) {
-    comfortElem.textContent = comfort;
-    comfortElem.style.color = comfortColor;
-  }
-
-  const trendElem = document.getElementById('aiTrendVal');
-  if (trendElem) {
-    trendElem.textContent = trendText;
-    trendElem.style.color = trendColor;
-  }
-
-  const adviceElem = document.getElementById('aiAdviceText');
-  if (adviceElem) {
-    adviceElem.textContent = advice;
-  }
-}
-
-// Đồng hồ thời gian thực
-function updateClock() {
-  const now = new Date();
-  const time = now.toLocaleTimeString('vi-VN', { hour12: false });
-  const clockElem = document.getElementById('clock');
-  const topTimeElem = document.getElementById('topTime');
-  const dateElem = document.getElementById('date');
-
-  if (clockElem) clockElem.textContent = time;
-  if (topTimeElem) topTimeElem.textContent = time;
-  if (dateElem) {
-    dateElem.textContent = now.toLocaleDateString('vi-VN', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    });
-  }
-}
-
-// Tạo mẫu đo nhiệt độ mới
-function newSample() {
-  temp = Math.max(20, Math.min(38, temp + (Math.random() - .5) * 2));
-  const tempElem = document.getElementById('temperature');
-  const updatedElem = document.getElementById('updated');
-
-  if (tempElem) tempElem.textContent = temp.toFixed(1);
-  if (updatedElem) updatedElem.textContent = new Date().toLocaleTimeString('vi-VN', { hour12: false });
-
-  readings.push({
-    time: new Date().toLocaleTimeString('vi-VN', { hour12: false }),
-    temp: temp
-  });
-  readings = readings.slice(-8);
-
-  renderReadings();
-  refreshAiDiagnostics();
-}
-
-function renderReadings() {
-  const chart = document.getElementById('chart');
-  if (chart) {
-    chart.innerHTML = readings.map(r => {
-      const height = Math.max(12, Math.min(100, r.temp * 2.2));
-      return `<div class="bar" title="${r.temp.toFixed(1)} °C" style="height:${height}%"></div>`;
-    }).join('');
-  }
-
-  const history = document.getElementById('history');
-  if (history) {
-    history.innerHTML = readings.slice().reverse().slice(0, 5).map(r =>
-      `<tr><td>${r.time}</td><td>${r.temp.toFixed(1)} °C</td><td>${demo ? 'Simulation' : 'ESP8266'}</td></tr>`
-    ).join('');
-  }
-}
-
-function toggleMode() {
-  demo = !demo;
-  document.getElementById('modeButton').textContent = demo ? '◉ Simulation Mode' : '◉ Device Mode';
-  document.getElementById('status').textContent = demo ? '● Simulation running' : '● Device mode selected';
-  document.getElementById('system').textContent = demo ? 'ONLINE' : 'WAITING';
-  document.getElementById('systemInfo').textContent = demo ? 'Local monitoring dashboard' : 'Device API not connected yet';
-  document.getElementById('wifi').textContent = demo ? 'Simulation' : 'Not connected';
-  refreshAiDiagnostics();
-}
-
-// Kiểm tra trạng thái AI Server
-async function checkAiServerStatus() {
-  try {
-    const res = await fetch('/api/status');
-    if (res.ok) {
-      const data = await res.json();
-      const statusText = document.getElementById('aiStatusText');
-      const modelVal = document.getElementById('aiModelVal');
-      if (statusText) statusText.textContent = data.aiConfigured ? 'OpenAI Live' : 'AI Engine Ready';
-      if (modelVal) modelVal.textContent = data.aiConfigured ? data.aiModel : 'Smart AI Engine';
-    }
-  } catch (_e) {
-    // Chế độ client offline
-    const statusText = document.getElementById('aiStatusText');
-    if (statusText) statusText.textContent = 'AI Offline Client';
-  }
-}
-
-// Event Listeners cho AI Box và Chat Popup
-document.addEventListener('DOMContentLoaded', () => {
-  // Submit AI Form trong AI Box
-  const aiForm = document.getElementById('aiForm');
-  if (aiForm) {
-    aiForm.addEventListener('submit', event => {
-      event.preventDefault();
-      const input = document.getElementById('aiInput');
-      if (input && input.value.trim()) {
-        const val = input.value;
-        input.value = '';
-        void sendChatMessage(val);
-      }
-    });
-  }
-
-  // Floating Chat Controls
-  const chatLauncher = document.getElementById('chatLauncher');
-  const chatPanel = document.getElementById('chatPanel');
-  const chatClose = document.getElementById('chatClose');
-  const chatForm = document.getElementById('chatForm');
-
-  if (chatLauncher) {
-    chatLauncher.addEventListener('click', () => {
-      if (chatPanel) {
-        const isHidden = chatPanel.hidden;
-        chatPanel.hidden = !isHidden;
-        if (isHidden) {
-          const input = document.getElementById('chatInput');
-          if (input) setTimeout(() => input.focus(), 100);
-        }
+    const diff = readings[readings.length - 1].temp - readings[0].temp;
+    if (trendVal) {
+      if (diff > 0.4) {
+        trendVal.textContent = `Tăng (+${diff.toFixed(1)}°C)`;
+        trendVal.style.color = '#ef4444';
+      } else if (diff < -0.4) {
+        trendVal.textContent = `Hạ nhiệt (${diff.toFixed(1)}°C)`;
+        trendVal.style.color = '#10b981';
       } else {
-        scrollToAiBox();
+        trendVal.textContent = 'Ổn định';
+        trendVal.style.color = '#0284c7';
       }
-    });
+    }
   }
+}
 
-  if (chatClose && chatPanel) {
-    chatClose.addEventListener('click', () => {
-      chatPanel.hidden = true;
-    });
-  }
-
-  if (chatForm) {
-    chatForm.addEventListener('submit', event => {
-      event.preventDefault();
-      const input = document.getElementById('chatInput');
-      if (input && input.value.trim()) {
-        const val = input.value;
-        input.value = '';
-        void sendChatMessage(val);
-      }
-    });
-  }
-
-  // Khởi tạo đồng hồ và mẫu đo ban đầu
+// Khởi chạy khi load trang
+document.addEventListener('DOMContentLoaded', () => {
   updateClock();
-  for (let i = 0; i < 6; i++) newSample();
   setInterval(updateClock, 1000);
+
+  // Sinh 6 mẫu đo ban đầu
+  for (let i = 0; i < 6; i++) newSample();
+
+  // Chu kỳ lấy mẫu tự động mỗi 5 giây trong chế độ simulation
   setInterval(() => {
-    if (demo) newSample();
+    if (demo && !isFireAlarmActive) newSample();
   }, 5000);
 
-  checkAiServerStatus();
+  // Submit form chat
+  const form = document.getElementById('aiForm');
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const val = document.getElementById('aiInput')?.value;
+      if (val) void sendAiQuestion(val);
+    });
+  }
+
+  // Khởi tạo audio khi người dùng click lần đầu trên trang
+  document.body.addEventListener('click', () => {
+    if (!audioCtx) initAudio();
+  }, { once: true });
 });
 </script>
 </body>
