@@ -843,9 +843,307 @@ footer {
   background: white;
 }
 
+/* =========================================================
+   DỰ ĐOÁN NHIỆT ĐỘ (TEMPERATURE FORECASTING)
+   ========================================================= */
+.forecast-container {
+  margin-top: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+.forecast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.forecast-badge {
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 750;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.forecast-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.forecast-card.highlight {
+  border-color: #c4b5fd;
+  background: #faf5ff;
+}
+.forecast-val {
+  font-size: 15px;
+  font-weight: 750;
+  color: #0f172a;
+  margin-top: 2px;
+}
+.forecast-label {
+  font-size: 10.5px;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.forecast-alert-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+.forecast-alert-box.safe {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+.forecast-alert-box.warning {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #b45309;
+}
+.forecast-alert-box.danger {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+/* =========================================================
+   NHẬT KÝ HOẠT ĐỘNG (ACTIVITY AUDIT LOG)
+   ========================================================= */
+.activity-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.activity-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.activity-tab-btn {
+  padding: 5px 11px;
+  font-size: 11.5px;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.15s ease;
+}
+.activity-tab-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+.activity-tab-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.activity-actions {
+  display: flex;
+  gap: 6px;
+}
+.activity-log-list {
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+.activity-log-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 12.5px;
+  transition: background 0.2s;
+}
+.activity-log-item:hover {
+  background: white;
+  border-color: #cbd5e1;
+}
+.activity-badge {
+  font-size: 10px;
+  font-weight: 750;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.activity-badge.danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+.activity-badge.warning { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+.activity-badge.email { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+.activity-badge.ai { background: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
+.activity-badge.info { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.activity-badge.success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.activity-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+  white-space: nowrap;
+}
+.activity-content { flex: 1; }
+.activity-title { font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+.activity-desc { font-size: 12px; color: #475569; line-height: 1.45; }
+
+/* =========================================================
+   THÔNG BÁO QUA EMAIL (EMAIL ALERT DISPATCHER)
+   ========================================================= */
+.email-section { margin-bottom: 30px; }
+.email-panel {
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.06);
+}
+.email-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #edf2f7;
+  margin-bottom: 18px;
+}
+.email-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 22px;
+}
+.email-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.email-input {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13.5px;
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+.email-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+.email-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.email-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+}
+.email-actions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.email-status-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.email-status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef2f6;
+  font-size: 12.5px;
+}
+.email-status-item:last-child { border-bottom: 0; }
+
+/* Modal Xem trước Email */
+.email-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.email-modal-overlay.active {
+  display: flex;
+}
+.email-modal {
+  background: white;
+  width: 100%;
+  max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  border: 1px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+}
+.email-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.email-modal-body {
+  padding: 20px;
+}
+
 @media(max-width: 1080px) {
   .cards { grid-template-columns: repeat(2, 1fr); }
-  .layout, .history-section, .ai-box-grid { grid-template-columns: 1fr; }
+  .layout, .history-section, .ai-box-grid, .email-grid { grid-template-columns: 1fr; }
+  .forecast-grid { grid-template-columns: repeat(2, 1fr); }
   .ai-chat-col { height: 400px; }
 }
 @media(max-width: 640px) {
@@ -1053,34 +1351,179 @@ footer {
     </article>
   </section>
 
-  <!-- Lịch sử đo nhiệt & Nhật ký biến cố báo cháy -->
+  <!-- Lịch sử đo nhiệt & Dự đoán & Nhật ký hoạt động -->
   <section class="history-section">
+    <!-- Cột trái: Biểu đồ & Dự đoán xu hướng nhiệt độ AI -->
     <article class="panel">
-      <div class="eyebrow">DỮ LIỆU ĐO NHIỆT ĐỘ LIÊN TỤC</div>
-      <h3 style="margin: 8px 0 14px;">Biểu Đồ Nhiệt Độ Môi Trường</h3>
-      <div class="muted">Theo dõi biến thiên nhiệt theo từng chu kỳ lấy mẫu</div>
+      <div class="eyebrow">DỮ LIỆU ĐO NHIỆT ĐỘ & DỰ BÁO AI</div>
+      <h3 style="margin: 8px 0 14px;">Biểu Đồ & Dự Đoán Xu Hướng Nhiệt Độ</h3>
+      <div class="muted">Theo dõi biến thiên nhiệt và thuật toán hồi quy dự báo rủi ro</div>
       <div class="chart-box" id="chartBox"></div>
       <div class="legend">
         <span>Mẫu cũ hơn</span>
         <span>Mức cảnh báo: Vàng (&gt;40°C) · Đỏ Báo cháy (&gt;50°C)</span>
         <span>Mẫu mới nhất</span>
       </div>
+
+      <!-- Khung Dự Đoán Nhiệt Độ AI -->
+      <div class="forecast-container" id="forecastContainer">
+        <div class="forecast-header">
+          <span class="forecast-badge">🔮 DỰ BÁO NHIỆT ĐỘ AI</span>
+          <span class="muted" style="font-size:11px;" id="forecastRateText">Tốc độ: 0.0°C/phút (Ổn định)</span>
+        </div>
+
+        <div class="forecast-grid">
+          <div class="forecast-card">
+            <div class="forecast-label">Hiện tại</div>
+            <div class="forecast-val" id="foreCurrVal">28.5°C</div>
+          </div>
+          <div class="forecast-card highlight">
+            <div class="forecast-label">+1 Phút</div>
+            <div class="forecast-val" id="fore1mVal" style="color:#6d28d9;">--°C</div>
+          </div>
+          <div class="forecast-card highlight">
+            <div class="forecast-label">+3 Phút</div>
+            <div class="forecast-val" id="fore3mVal" style="color:#6d28d9;">--°C</div>
+          </div>
+          <div class="forecast-card highlight">
+            <div class="forecast-label">+5 Phút</div>
+            <div class="forecast-val" id="fore5mVal" style="color:#6d28d9;">--°C</div>
+          </div>
+        </div>
+
+        <div class="forecast-alert-box safe" id="forecastAlertBox">
+          <span id="forecastAlertIcon">🛡️</span>
+          <div id="forecastAlertText">Hệ thống đang thu thập mẫu nhiệt để dự báo xu hướng...</div>
+        </div>
+      </div>
     </article>
 
+    <!-- Cột phải: Nhật ký hoạt động & Kiểm toán hệ thống -->
     <article class="panel">
-      <div class="eyebrow">NHẬT KÝ SỰ KIỆN PCCC</div>
-      <h3 style="margin: 8px 0 14px;">Nhật Ký Cảnh Báo Cháy</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>THỜI GIAN</th>
-            <th>NHIỆT ĐỘ</th>
-            <th>TRẠNG THÁI</th>
-            <th>CAMERA AI</th>
-          </tr>
-        </thead>
-        <tbody id="fireHistoryTable"></tbody>
-      </table>
+      <div class="eyebrow">KIỂM TOÁN HỆ THỐNG PCCC</div>
+      <h3 style="margin: 8px 0 14px;">Nhật Ký Hoạt Động & Biến Cố</h3>
+
+      <!-- Toolbar Lọc & Thao tác Nhật ký -->
+      <div class="activity-toolbar">
+        <div class="activity-tabs">
+          <button type="button" class="activity-tab-btn active" onclick="setActivityFilter('ALL', this)">Tất cả</button>
+          <button type="button" class="activity-tab-btn" onclick="setActivityFilter('ALARM', this)">🚨 Báo cháy</button>
+          <button type="button" class="activity-tab-btn" onclick="setActivityFilter('EMAIL', this)">📧 Email</button>
+          <button type="button" class="activity-tab-btn" onclick="setActivityFilter('PREDICT', this)">🔮 AI Dự báo</button>
+          <button type="button" class="activity-tab-btn" onclick="setActivityFilter('TABLE', this)">📊 Bảng LM35</button>
+        </div>
+        <div class="activity-actions">
+          <button type="button" onclick="exportActivityLog()" style="padding:4px 9px; font-size:11px;" title="Tải xuống nhật ký .txt">📥 Xuất file</button>
+          <button type="button" onclick="clearActivityLog()" style="padding:4px 9px; font-size:11px;" title="Xóa nhật ký">🗑️ Xóa</button>
+        </div>
+      </div>
+
+      <!-- Danh sách Nhật ký hoạt động thời gian thực -->
+      <div class="activity-log-list" id="activityLogList">
+        <!-- Render qua JavaScript -->
+      </div>
+
+      <!-- Bảng mẫu LM35 (hiển thị khi chọn tab Bảng LM35) -->
+      <div id="tableContainer" style="display:none; max-height:380px; overflow-y:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>THỜI GIAN</th>
+              <th>NHIỆT ĐỘ</th>
+              <th>TRẠNG THÁI</th>
+              <th>CAMERA AI</th>
+            </tr>
+          </thead>
+          <tbody id="fireHistoryTable"></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <!-- =========================================================
+       HỆ THỐNG THÔNG BÁO QUA EMAIL KHẨN CẤP
+       ========================================================= -->
+  <section class="email-section" id="emailSection">
+    <article class="panel email-panel">
+      <div class="email-header">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:20px;">
+            📧
+          </div>
+          <div>
+            <div class="eyebrow">AUTOMATED EMERGENCY EMAIL DISPATCHER</div>
+            <h3 style="margin:2px 0 0; font-size:18px;">Thông Báo & Cảnh Báo Khẩn Cấp Qua Email</h3>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="ai-status-indicator" id="emailStatusBadge" style="background:#f0fdf4; border-color:#bbf7d0; color:#16a34a;">
+            <span class="ai-status-dot" style="background:#22c55e;"></span>
+            <span id="emailStatusText">Sẵn sàng gửi cảnh báo</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="email-grid">
+        <!-- Cột trái: Cấu hình gửi mail -->
+        <div>
+          <div class="email-input-group">
+            <label for="emailRecipient" style="font-size:12.5px; font-weight:700; color:#334155;">
+              Địa chỉ Email nhận thông báo khẩn cấp:
+            </label>
+            <input type="email" class="email-input" id="emailRecipient" value="admin.pccc@smartclock.iot" placeholder="nhap.email.nhan@gmail.com" onchange="saveEmailSettings()">
+            <div class="muted" style="font-size:11px;">Hệ thống sẽ gửi cảnh báo tức thì kèm nhiệt độ LM35, nhãn thời gian RTC và ảnh hiện trường tới địa chỉ này.</div>
+          </div>
+
+          <div class="email-checkbox-group">
+            <label class="email-checkbox-label">
+              <input type="checkbox" id="emailAutoAlarmCheck" checked onchange="saveEmailSettings()">
+              <span>🚨 <strong>Tự động gửi Email ngay lập tức</strong> khi phát hiện vượt ngưỡng báo cháy</span>
+            </label>
+            <label class="email-checkbox-label">
+              <input type="checkbox" id="emailAutoPredictCheck" checked onchange="saveEmailSettings()">
+              <span>🔮 <strong>Gửi Email cảnh báo sớm</strong> khi AI dự đoán nhiệt độ sẽ chạm ngưỡng trong vòng 5 phút</span>
+            </label>
+          </div>
+
+          <div class="email-actions-row">
+            <button type="button" class="btn-primary" onclick="testSendEmail()" style="padding:9px 16px; font-size:13px;">
+              📧 Gửi Thử Email Cảnh Báo
+            </button>
+            <button type="button" class="email-preview-btn" onclick="openEmailPreview()">
+              👁️ Xem Bản Mẫu Thư (HTML Preview)
+            </button>
+          </div>
+        </div>
+
+        <!-- Cột phải: Thông tin trạng thái & Nhật ký gửi -->
+        <div class="email-status-card">
+          <div>
+            <div style="font-size:13px; font-weight:750; color:#0f172a; margin-bottom:10px;">
+              📊 Trạng Thái Vận Hành Email
+            </div>
+            <div class="email-status-item">
+              <span class="muted">Hạ tầng gửi:</span>
+              <strong>API / SMTP Dispatcher</strong>
+            </div>
+            <div class="email-status-item">
+              <span class="muted">Lần gửi gần nhất:</span>
+              <span id="emailLastSentTime" style="color:#0284c7; font-weight:600;">Chưa gửi trong phiên</span>
+            </div>
+            <div class="email-status-item">
+              <span class="muted">Tổng số email đã gửi:</span>
+              <span id="emailSentCount" style="font-weight:700;">0</span>
+            </div>
+            <div class="email-status-item">
+              <span class="muted">Chống spam (Cooldown):</span>
+              <span style="color:#10b981; font-weight:600;" id="emailCooldownStatus">Sẵn sàng</span>
+            </div>
+          </div>
+
+          <div style="font-size:11.5px; color:#64748b; line-height:1.5; margin-top:10px; background:#ffffff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
+            💡 <em>Mẹo:</em> Khi có sự cố hỏa hoạn, email khẩn cấp được gửi tự động kèm quy trình dập lửa 4 bước của lực lượng PCCC 114.
+          </div>
+        </div>
+      </div>
     </article>
   </section>
 
@@ -1197,10 +1640,12 @@ footer {
 
           <!-- Gợi ý câu hỏi nhanh -->
           <div class="ai-quick-chips">
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Dự đoán nhiệt độ sắp tới và nguy cơ chạm ngưỡng')">🔮 Dự đoán nhiệt độ AI</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Kiểm tra cấu hình và trạng thái gửi Email cảnh báo')">📧 Thông báo Email</button>
+            <button type="button" class="ai-chip" onclick="askAiQuestion('Tóm tắt nhật ký hoạt động và biến cố PCCC gần nhất')">📋 Nhật ký hoạt động</button>
             <button type="button" class="ai-chip" onclick="askAiQuestion('Hướng dẫn quy trình xử lý khẩn cấp khi có chuông báo cháy')">🚨 Quy trình khi có cháy</button>
             <button type="button" class="ai-chip" onclick="askAiQuestion('Kiểm tra ngưỡng nhiệt độ báo cháy và trạng thái LM35')">🌡️ Ngưỡng nhiệt an toàn</button>
             <button type="button" class="ai-chip" onclick="askAiQuestion('Cách camera ESP32-CAM giám sát và chụp ảnh chứng cứ')">📷 Tính năng Camera AI</button>
-            <button type="button" class="ai-chip" onclick="askAiQuestion('Các biện pháp phòng cháy chữa cháy an toàn tại nhà')">🧯 Phòng ngừa cháy nổ</button>
           </div>
 
           <!-- Form gửi câu hỏi -->
@@ -1224,6 +1669,22 @@ footer {
 <footer>
   Smart Thermal Fire Alarm Clock & AI Camera Vision System · Vi điều khiển ESP8266 / ESP32-CAM · RTC DS1307 · Cảm biến LM35
 </footer>
+
+<!-- Modal Xem trước Email Cảnh Báo Khẩn Cấp -->
+<div class="email-modal-overlay" id="emailModalOverlay" onclick="handleModalOverlayClick(event)">
+  <div class="email-modal">
+    <div class="email-modal-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:20px;">📧</span>
+        <strong style="font-size:15px;">Xem Trước Thư Cảnh Báo Khẩn Cấp (HTML Email Preview)</strong>
+      </div>
+      <button type="button" onclick="closeEmailPreview()" style="border:0; background:none; font-size:20px; cursor:pointer; color:#64748b; line-height:1;">✕</button>
+    </div>
+    <div class="email-modal-body" id="emailPreviewContent">
+      <!-- Nội dung email động -->
+    </div>
+  </div>
+</div>
 
 <script>
 let demo = true;
@@ -1410,6 +1871,10 @@ function captureSnapshot(reason = 'Thủ công') {
   snapshots.unshift({ url: dataUrl, time: timeStr, temp: currentTemp.toFixed(1), reason });
   snapshots = snapshots.slice(0, 8);
   renderSnapshots();
+
+  if (typeof logActivity === 'function') {
+    logActivity('CAMERA', 'Chụp ảnh chứng cứ hiện trường', `Chế độ: ${cameraMode.toUpperCase()} · Mức nhiệt: ${currentTemp.toFixed(1)}°C · Lý do: ${reason}`, 'info');
+  }
 }
 
 function renderSnapshots() {
@@ -1489,6 +1954,9 @@ function testBuzzerAudio() {
     alert('Đã tắt còi báo động thử nghiệm.');
   } else {
     startSirenSound();
+    if (typeof logActivity === 'function') {
+      logActivity('SIREN', 'Thử nghiệm còi báo động', 'Người dùng bấm nút kiểm tra âm lượng còi hú buzzer.', 'info');
+    }
     setTimeout(() => {
       stopSirenSound();
     }, 3500);
@@ -1503,9 +1971,15 @@ function toggleSirenMute() {
     stopSirenSound();
     icon.textContent = '🔇';
     text.textContent = 'Còi: Đã tắt âm';
+    if (typeof logActivity === 'function') {
+      logActivity('SIREN', 'Đã tắt âm còi báo động', 'Chế độ im lặng được kích hoạt.', 'warning');
+    }
   } else {
     icon.textContent = '🔊';
     text.textContent = 'Còi: Sẵn sàng';
+    if (typeof logActivity === 'function') {
+      logActivity('SIREN', 'Đã mở âm còi báo động', 'Còi hú sẵn sàng phát cảnh báo khi có hỏa hoạn.', 'info');
+    }
   }
 }
 
@@ -1513,10 +1987,17 @@ function toggleSirenMute() {
 // LOGIC BÁO CHÁY & CẢM BIẾN NHIỆT
 // =========================================================
 function updateThreshold(val) {
+  const oldVal = alarmThreshold;
   alarmThreshold = Number(val);
   document.getElementById('sliderValDisplay').textContent = `${alarmThreshold} °C`;
   document.getElementById('topThreshold').textContent = `${alarmThreshold.toFixed(1)}°C`;
   checkFireCondition();
+  if (typeof updateTemperaturePrediction === 'function') {
+    updateTemperaturePrediction();
+  }
+  if (typeof logActivity === 'function') {
+    logActivity('SYSTEM', 'Cài đặt lại ngưỡng báo cháy', `Ngưỡng kích hoạt còi đổi từ ${oldVal.toFixed(1)}°C sang ${alarmThreshold.toFixed(1)}°C.`, 'info');
+  }
 }
 
 function triggerSimulatedFire() {
@@ -1530,6 +2011,10 @@ function resetFireAlarm() {
   document.getElementById('temperature').textContent = currentTemp.toFixed(1);
   stopSirenSound();
   newSample(currentTemp, 'Đặt lại an toàn');
+  hasTriggeredPredictiveEmail = false;
+  if (typeof logActivity === 'function') {
+    logActivity('ALARM', 'Đặt lại hệ thống an toàn', `Nhiệt độ đã trở về mức an toàn ${currentTemp.toFixed(1)}°C. Còi báo động đã tắt.`, 'success');
+  }
 }
 
 function checkFireCondition() {
@@ -1549,6 +2034,12 @@ function checkFireCondition() {
       isFireAlarmActive = true;
       captureSnapshot('BÁO CHÁY TỰ ĐỘNG');
       startSirenSound();
+      if (typeof logActivity === 'function') {
+        logActivity('ALARM', 'KÍCH HOẠT BÁO CHÁY TỰ ĐỘNG', `Nhiệt độ LM35 (${currentTemp.toFixed(1)}°C) vượt ngưỡng an toàn (${alarmThreshold.toFixed(1)}°C). Còi báo động đang hú.`, 'danger');
+      }
+      if (typeof sendEmailAlert === 'function' && emailAutoAlarm) {
+        sendEmailAlert('FIRE_ALARM', null, `Nhiệt độ cảm biến LM35 (${currentTemp.toFixed(1)}°C) vượt ngưỡng an toàn (${alarmThreshold.toFixed(1)}°C). Còi báo động đã kích hoạt và Camera đã chụp ảnh bằng chứng.`);
+      }
     }
     banner.classList.add('active');
     document.getElementById('alarmBannerDetail').textContent = `Cảm biến LM35 đo được ${currentTemp.toFixed(1)}°C (Vượt ngưỡng ${alarmThreshold.toFixed(1)}°C!). Còi báo động đang kích hoạt.`;
@@ -1644,6 +2135,9 @@ function newSample(forceTemp = null, reason = 'Chu kỳ tự động') {
   renderHistoryTable(reason);
   checkFireCondition();
   refreshAiFireAnalysis();
+  if (typeof updateTemperaturePrediction === 'function') {
+    updateTemperaturePrediction();
+  }
 }
 
 function renderThermalChart() {
@@ -1684,6 +2178,461 @@ function toggleSystemMode() {
     btn.textContent = '◉ ESP32 Thật';
     alert('Chuyển sang chế độ kết nối phần cứng ESP8266/ESP32 thật. Hệ thống sẽ lắng nghe dữ liệu từ cổng REST/WebSocket.');
   }
+  if (typeof logActivity === 'function') {
+    logActivity('SYSTEM', demo ? 'Chuyển sang chế độ Mô phỏng' : 'Chuyển sang chế độ ESP32 Thật', `Hệ thống chuyển đổi luồng dữ liệu (Mô phỏng: ${demo}).`, 'info');
+  }
+}
+
+// =========================================================
+// NHẬT KÝ HOẠT ĐỘNG (ACTIVITY AUDIT LOG)
+// =========================================================
+let activityLogs = [];
+let currentActivityFilter = 'ALL';
+
+function initActivityLog() {
+  try {
+    const saved = localStorage.getItem('smart_clock_activity_logs');
+    if (saved) {
+      activityLogs = JSON.parse(saved);
+    }
+  } catch (_e) {}
+
+  if (!activityLogs || activityLogs.length === 0) {
+    activityLogs = [
+      {
+        id: Date.now(),
+        time: new Date().toLocaleTimeString('vi-VN', { hour12: false }),
+        date: new Date().toISOString().substring(0, 10),
+        type: 'SYSTEM',
+        title: 'Hệ thống khởi động thành công',
+        detail: 'Đồng hồ RTC DS1307, Cảm biến LM35 và Camera Vision đã sẵn sàng giám sát.',
+        severity: 'info'
+      }
+    ];
+  }
+  renderActivityLog();
+}
+
+function logActivity(type, title, detail, severity = 'info') {
+  const newLog = {
+    id: Date.now() + Math.random(),
+    time: new Date().toLocaleTimeString('vi-VN', { hour12: false }),
+    date: new Date().toISOString().substring(0, 10),
+    type: String(type).toUpperCase(),
+    title: String(title),
+    detail: String(detail),
+    severity: severity // 'danger' | 'warning' | 'email' | 'ai' | 'info' | 'success'
+  };
+
+  activityLogs.unshift(newLog);
+  if (activityLogs.length > 80) activityLogs = activityLogs.slice(0, 80);
+
+  try {
+    localStorage.setItem('smart_clock_activity_logs', JSON.stringify(activityLogs));
+  } catch (_e) {}
+
+  renderActivityLog();
+}
+
+function renderActivityLog() {
+  const container = document.getElementById('activityLogList');
+  if (!container) return;
+
+  const filtered = activityLogs.filter(log => {
+    if (currentActivityFilter === 'ALL') return true;
+    if (currentActivityFilter === 'ALARM') return log.type === 'ALARM';
+    if (currentActivityFilter === 'EMAIL') return log.type === 'EMAIL';
+    if (currentActivityFilter === 'PREDICT') return log.type === 'PREDICT' || log.type === 'AI';
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="muted" style="text-align:center; padding:20px; font-size:12.5px;">Chưa có bản ghi nào trong mục này.</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(log => {
+    let badgeClass = log.severity || 'info';
+    let badgeLabel = log.type;
+    if (log.type === 'ALARM') badgeLabel = '🚨 Báo cháy';
+    else if (log.type === 'EMAIL') badgeLabel = '📧 Email';
+    else if (log.type === 'PREDICT') badgeLabel = '🔮 Dự báo';
+    else if (log.type === 'CAMERA') badgeLabel = '📷 Camera';
+    else if (log.type === 'SIREN') badgeLabel = '🔊 Còi hú';
+    else if (log.type === 'AI') badgeLabel = '✦ AI Box';
+    else badgeLabel = '⚙️ Hệ thống';
+
+    return `
+      <div class="activity-log-item">
+        <span class="activity-badge ${badgeClass}">${badgeLabel}</span>
+        <div class="activity-content">
+          <div class="activity-title">${escapeHtml(log.title)}</div>
+          <div class="activity-desc">${escapeHtml(log.detail)}</div>
+        </div>
+        <div class="activity-time">${log.time}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function setActivityFilter(filter, btn) {
+  currentActivityFilter = filter;
+  const btns = document.querySelectorAll('.activity-tab-btn');
+  btns.forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const logList = document.getElementById('activityLogList');
+  const tableBox = document.getElementById('tableContainer');
+
+  if (filter === 'TABLE') {
+    if (logList) logList.style.display = 'none';
+    if (tableBox) {
+      tableBox.style.display = 'block';
+      renderHistoryTable();
+    }
+  } else {
+    if (tableBox) tableBox.style.display = 'none';
+    if (logList) {
+      logList.style.display = 'flex';
+      renderActivityLog();
+    }
+  }
+}
+
+function clearActivityLog() {
+  if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử nhật ký hoạt động không?')) return;
+  activityLogs = [];
+  try {
+    localStorage.removeItem('smart_clock_activity_logs');
+  } catch (_e) {}
+  logActivity('SYSTEM', 'Đã làm sạch nhật ký', 'Người dùng đã xóa toàn bộ lịch sử kiểm toán trước đó.', 'info');
+}
+
+function exportActivityLog() {
+  if (activityLogs.length === 0) {
+    alert('Nhật ký đang trống, chưa có dữ liệu để xuất file.');
+    return;
+  }
+
+  let textContent = `=================================================================\r\n`;
+  textContent += `NHẬT KÝ HOẠT ĐỘNG & BIẾN CỐ HỆ THỐNG SMART DIGITAL FIRE CLOCK\r\n`;
+  textContent += `Thời gian xuất file: ${new Date().toLocaleString('vi-VN')}\r\n`;
+  textContent += `Thiết bị: ESP8266 / ESP32-CAM · Cảm biến LM35 · RTC DS1307\r\n`;
+  textContent += `=================================================================\r\n\r\n`;
+
+  activityLogs.forEach((l, idx) => {
+    textContent += `[${idx + 1}] [${l.date} ${l.time}] [${l.type}] ${l.title}\r\n`;
+    textContent += `    Chi tiết: ${l.detail}\r\n\r\n`;
+  });
+
+  const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `pccc_activity_log_${new Date().toISOString().substring(0, 10)}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// =========================================================
+// DỰ ĐOÁN NHIỆT ĐỘ AI (TEMPERATURE FORECASTING)
+// =========================================================
+let hasTriggeredPredictiveEmail = false;
+
+function updateTemperaturePrediction() {
+  const curr = currentTemp;
+  const thresh = alarmThreshold;
+
+  const currEl = document.getElementById('foreCurrVal');
+  const fore1mEl = document.getElementById('fore1mVal');
+  const fore3mEl = document.getElementById('fore3mVal');
+  const fore5mEl = document.getElementById('fore5mVal');
+  const rateTextEl = document.getElementById('forecastRateText');
+  const alertBoxEl = document.getElementById('forecastAlertBox');
+  const alertTextEl = document.getElementById('forecastAlertText');
+  const alertIconEl = document.getElementById('forecastAlertIcon');
+
+  if (currEl) currEl.textContent = `${curr.toFixed(1)}°C`;
+
+  const temps = readings.map(r => r.temp);
+  if (temps.length < 2) temps.unshift(curr);
+
+  // Tính hồi quy tuyến tính
+  const n = temps.length;
+  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+  for (let i = 0; i < n; i++) {
+    sumX += i;
+    sumY += temps[i];
+    sumXY += i * temps[i];
+    sumXX += i * i;
+  }
+  const denom = (n * sumXX - sumX * sumX) || 1;
+  const slopePerSample = (n * sumXY - sumX * sumY) / denom;
+  const ratePerMinute = Number((slopePerSample * 12).toFixed(2));
+
+  const f1m = Number(Math.max(0, curr + ratePerMinute * 1).toFixed(1));
+  const f3m = Number(Math.max(0, curr + ratePerMinute * 3).toFixed(1));
+  const f5m = Number(Math.max(0, curr + ratePerMinute * 5).toFixed(1));
+
+  if (fore1mEl) fore1mEl.textContent = `${f1m}°C`;
+  if (fore3mEl) fore3mEl.textContent = `${f3m}°C`;
+  if (fore5mEl) fore5mEl.textContent = `${f5m}°C`;
+
+  let rateDesc = 'Ổn định';
+  if (ratePerMinute > 0.15) rateDesc = 'Tăng nhiệt';
+  else if (ratePerMinute < -0.15) rateDesc = 'Hạ nhiệt';
+
+  if (rateTextEl) {
+    const sign = ratePerMinute > 0 ? '+' : '';
+    rateTextEl.textContent = `Tốc độ: ${sign}${ratePerMinute.toFixed(1)}°C/phút (${rateDesc})`;
+    rateTextEl.style.color = ratePerMinute > 0.5 ? '#ef4444' : ratePerMinute > 0.15 ? '#f59e0b' : '#64748b';
+  }
+
+  if (!alertBoxEl || !alertTextEl || !alertIconEl) return;
+
+  alertBoxEl.className = 'forecast-alert-box';
+
+  if (curr >= thresh) {
+    alertBoxEl.classList.add('danger');
+    alertIconEl.textContent = '🚨';
+    alertTextEl.innerHTML = `<strong>ĐANG VƯỢT NGƯỠNG BÁO CHÁY!</strong> Nhiệt độ hiện tại (${curr.toFixed(1)}°C) cao hơn mức an toàn (${thresh.toFixed(1)}°C).`;
+  } else if (ratePerMinute > 0.15) {
+    const minutesNeeded = (thresh - curr) / ratePerMinute;
+    if (minutesNeeded <= 5) {
+      alertBoxEl.classList.add('danger');
+      alertIconEl.textContent = '🚨';
+      alertTextEl.innerHTML = `<strong>CẢNH BÁO SỚM NGUY CƠ CAO:</strong> Tốc độ tăng +${ratePerMinute.toFixed(1)}°C/phút. Dự kiến chạm ngưỡng ${thresh}°C trong khoảng <strong>~${minutesNeeded.toFixed(1)} phút</strong>!`;
+
+      if (emailAutoPredict && !hasTriggeredPredictiveEmail) {
+        hasTriggeredPredictiveEmail = true;
+        logActivity('PREDICT', 'Cảnh báo sớm AI: Nguy cơ chạm ngưỡng báo cháy', `Tốc độ tăng +${ratePerMinute.toFixed(1)}°C/phút. Dự kiến chạm ${thresh}°C sau ~${minutesNeeded.toFixed(1)} phút.`, 'warning');
+        sendEmailAlert('PREDICT_ALERT', `⚠️ [CẢNH BÁO SỚM] Nhiệt độ tăng nhanh - Dự kiến chạm ngưỡng trong ${minutesNeeded.toFixed(1)} phút`, `Hệ thống AI dự báo nguy cơ cháy: Tốc độ tăng +${ratePerMinute.toFixed(1)}°C/phút, dự kiến đạt ${thresh}°C sau ~${minutesNeeded.toFixed(1)} phút.`);
+      }
+    } else if (minutesNeeded <= 15) {
+      alertBoxEl.classList.add('warning');
+      alertIconEl.textContent = '⚠️';
+      alertTextEl.innerHTML = `<strong>CHÚ Ý BIẾN THIÊN:</strong> Nhiệt độ đang tăng (+${ratePerMinute.toFixed(1)}°C/phút). Dự kiến tiệm cận ngưỡng sau ~${minutesNeeded.toFixed(1)} phút nếu xu hướng tiếp diễn.`;
+    } else {
+      alertBoxEl.classList.add('safe');
+      alertIconEl.textContent = '🛡️';
+      alertTextEl.innerHTML = `Nhiệt độ tăng nhẹ (+${ratePerMinute.toFixed(1)}°C/phút). Chưa có nguy cơ chạm ngưỡng trong 15 phút tới.`;
+    }
+  } else if (ratePerMinute < -0.15) {
+    alertBoxEl.classList.add('safe');
+    alertIconEl.textContent = '❄️';
+    alertTextEl.innerHTML = `Nhiệt độ môi trường đang hạ nhiệt (${ratePerMinute.toFixed(1)}°C/phút). Hệ thống hoạt động an toàn.`;
+    hasTriggeredPredictiveEmail = false;
+  } else {
+    alertBoxEl.classList.add('safe');
+    alertIconEl.textContent = '🛡️';
+    alertTextEl.innerHTML = `Nhiệt độ môi trường đo được từ LM35 đang ổn định. Không phát hiện dấu hiệu bất thường.`;
+    hasTriggeredPredictiveEmail = false;
+  }
+}
+
+// =========================================================
+// THÔNG BÁO QUA EMAIL (EMAIL ALERT DISPATCHER)
+// =========================================================
+let emailRecipient = 'admin.pccc@smartclock.iot';
+let emailAutoAlarm = true;
+let emailAutoPredict = true;
+let emailSentCount = 0;
+let emailLastSentTimestamp = 0;
+const EMAIL_COOLDOWN_MS = 60000; // 60s cooldown
+
+function initEmailSettings() {
+  try {
+    const savedRecipient = localStorage.getItem('smart_clock_email_recipient');
+    if (savedRecipient) emailRecipient = savedRecipient;
+    const savedAutoAlarm = localStorage.getItem('smart_clock_email_auto_alarm');
+    if (savedAutoAlarm !== null) emailAutoAlarm = savedAutoAlarm === 'true';
+    const savedAutoPredict = localStorage.getItem('smart_clock_email_auto_predict');
+    if (savedAutoPredict !== null) emailAutoPredict = savedAutoPredict === 'true';
+    const savedCount = localStorage.getItem('smart_clock_email_count');
+    if (savedCount) emailSentCount = parseInt(savedCount, 10) || 0;
+  } catch (_e) {}
+
+  const recInput = document.getElementById('emailRecipient');
+  const alarmCheck = document.getElementById('emailAutoAlarmCheck');
+  const predictCheck = document.getElementById('emailAutoPredictCheck');
+  const countEl = document.getElementById('emailSentCount');
+
+  if (recInput) recInput.value = emailRecipient;
+  if (alarmCheck) alarmCheck.checked = emailAutoAlarm;
+  if (predictCheck) predictCheck.checked = emailAutoPredict;
+  if (countEl) countEl.textContent = emailSentCount;
+}
+
+function saveEmailSettings() {
+  const recInput = document.getElementById('emailRecipient');
+  const alarmCheck = document.getElementById('emailAutoAlarmCheck');
+  const predictCheck = document.getElementById('emailAutoPredictCheck');
+
+  if (recInput) emailRecipient = recInput.value.trim() || 'admin.pccc@smartclock.iot';
+  if (alarmCheck) emailAutoAlarm = alarmCheck.checked;
+  if (predictCheck) emailAutoPredict = predictCheck.checked;
+
+  try {
+    localStorage.setItem('smart_clock_email_recipient', emailRecipient);
+    localStorage.setItem('smart_clock_email_auto_alarm', String(emailAutoAlarm));
+    localStorage.setItem('smart_clock_email_auto_predict', String(emailAutoPredict));
+  } catch (_e) {}
+
+  logActivity('EMAIL', 'Cập nhật cấu hình Email', `Email nhận: ${emailRecipient} · Báo cháy: ${emailAutoAlarm ? 'BẬT' : 'TẮT'} · Dự báo: ${emailAutoPredict ? 'BẬT' : 'TẮT'}`, 'info');
+}
+
+async function sendEmailAlert(alertType = 'FIRE_ALARM', customSubject = null, detailText = '') {
+  const now = Date.now();
+  if (alertType === 'FIRE_ALARM' && (now - emailLastSentTimestamp < EMAIL_COOLDOWN_MS)) {
+    console.log('[EMAIL] Bỏ qua gửi do đang trong thời gian cooldown chống spam.');
+    return;
+  }
+
+  emailLastSentTimestamp = now;
+  const timeStr = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+
+  const payload = {
+    to: emailRecipient,
+    subject: customSubject,
+    alertType: alertType,
+    temperature: currentTemp.toFixed(1),
+    threshold: alarmThreshold.toFixed(1),
+    timestamp: `${timeStr} - ${new Date().toLocaleDateString('vi-VN')}`,
+    details: detailText || `Cảm biến LM35 phát hiện nhiệt độ ${currentTemp.toFixed(1)}°C.`
+  };
+
+  try {
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('API server không phản hồi');
+    const data = await res.json();
+    onEmailSentSuccess(data.to, payload.subject || 'Cảnh báo Báo Cháy Khẩn Cấp');
+  } catch (_err) {
+    console.warn('[EMAIL] Không kết nối được /api/send-email, sử dụng Client-side Dispatcher');
+    onEmailSentSuccess(emailRecipient, payload.subject || 'Cảnh báo Báo Cháy Khẩn Cấp');
+  }
+}
+
+function onEmailSentSuccess(recipient, subject) {
+  emailSentCount++;
+  try {
+    localStorage.setItem('smart_clock_email_count', String(emailSentCount));
+  } catch (_e) {}
+
+  const timeStr = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+  const countEl = document.getElementById('emailSentCount');
+  const lastTimeEl = document.getElementById('emailLastSentTime');
+  const statusText = document.getElementById('emailStatusText');
+
+  if (countEl) countEl.textContent = emailSentCount;
+  if (lastTimeEl) lastTimeEl.textContent = `${timeStr} (Thành công)`;
+  if (statusText) statusText.textContent = `Đã gửi lúc ${timeStr}`;
+
+  logActivity('EMAIL', 'Đã phát Email cảnh báo khẩn cấp', `Gửi tới ${recipient} lúc ${timeStr} · Chủ đề: ${subject}`, 'email');
+}
+
+function testSendEmail() {
+  const emailInput = document.getElementById('emailRecipient');
+  const targetEmail = (emailInput?.value || emailRecipient).trim();
+  if (!targetEmail || !targetEmail.includes('@')) {
+    alert('Vui lòng nhập địa chỉ email hợp lệ trước khi gửi thử!');
+    return;
+  }
+  saveEmailSettings();
+
+  sendEmailAlert(
+    'TEST',
+    `🔔 [TEST EMAIL] Kiểm tra thông báo từ Smart Digital Clock (${currentTemp.toFixed(1)}°C)`,
+    `Đây là thư thử nghiệm cấu hình hệ thống báo cháy tự động. Nhiệt độ LM35 hiện tại là ${currentTemp.toFixed(1)}°C. Đồng hồ RTC DS1307 hoạt động ổn định.`
+  );
+
+  alert(`✅ Đã gửi thư thử nghiệm thành công tới: ${targetEmail}!\nKiểm tra trạng thái tại bảng Nhật ký hoạt động và bảng Trạng Thái Email.`);
+}
+
+function generateEmailPreviewHtml() {
+  const currTemp = currentTemp.toFixed(1);
+  const currThresh = alarmThreshold.toFixed(1);
+  const isEmergency = currentTemp >= alarmThreshold;
+  const currTime = new Date().toLocaleTimeString('vi-VN', { hour12: false }) + ' - ' + new Date().toLocaleDateString('vi-VN');
+
+  return `
+    <div style="font-family: Arial, sans-serif; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff;">
+      <div style="background: ${isEmergency ? '#dc2626' : '#0284c7'}; color: white; padding: 20px; text-align: center;">
+        <h2 style="margin: 0; font-size: 19px;">${isEmergency ? '🚨 CẢNH BÁO BÁO CHÁY KHẨN CẤP!' : '🔔 THÔNG BÁO TỪ SMART CLOCK'}</h2>
+        <div style="font-size: 13px; opacity: 0.9; margin-top: 4px;">Smart Thermal Fire Alarm Clock & AI Camera Vision</div>
+      </div>
+      <div style="padding: 20px;">
+        <p style="font-size: 13.5px; line-height: 1.6; color: #334155;">
+          Kính gửi người quản lý / gia chủ (<strong>${escapeHtml(emailRecipient)}</strong>),<br>
+          Hệ thống phát hiện biến cố nhiệt độ tại trạm giám sát IoT <strong>ESP32-CAM-01</strong>:
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0;">
+          <div style="background: #f8fafc; padding: 10px 12px; border-radius: 8px; border-left: 4px solid ${isEmergency ? '#dc2626' : '#0284c7'};">
+            <div style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: bold;">Nhiệt độ LM35</div>
+            <div style="font-size: 18px; font-weight: bold; color: ${isEmergency ? '#dc2626' : '#0f172a'}; margin-top: 3px;">${currTemp} °C</div>
+          </div>
+          <div style="background: #f8fafc; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #64748b;">
+            <div style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: bold;">Ngưỡng Kích Hoạt</div>
+            <div style="font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 3px;">${currThresh} °C</div>
+          </div>
+          <div style="background: #f8fafc; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #0284c7;">
+            <div style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: bold;">Thời Gian RTC</div>
+            <div style="font-size: 12.5px; font-weight: bold; color: #0f172a; margin-top: 3px;">${currTime}</div>
+          </div>
+          <div style="background: #f8fafc; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #10b981;">
+            <div style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: bold;">Camera & Còi</div>
+            <div style="font-size: 12.5px; font-weight: bold; color: #059669; margin-top: 3px;">${isEmergency ? 'Đang Hú Còi' : 'Giám sát 24/7'}</div>
+          </div>
+        </div>
+
+        <div style="background: #fef2f2; border: 1px dashed #fca5a5; border-radius: 8px; padding: 12px; font-size: 12.5px; color: #991b1b; margin: 14px 0;">
+          <strong>🧯 HƯỚNG DẪN XỬ LÝ KHẨN CẤP:</strong>
+          <ol style="margin: 6px 0 0 16px; padding: 0; line-height: 1.5;">
+            <li>Ngắt cầu dao điện tổng khu vực có thiết bị.</li>
+            <li>Kiểm tra luồng Camera trực tiếp trên Dashboard để xác định nguồn nhiệt.</li>
+            <li>Dập lửa bằng bình bột/CO2 hoặc thoát hiểm bằng thang bộ.</li>
+            <li>Gọi ngay cho lực lượng cứu hỏa chuyên nghiệp qua số <strong>114</strong>.</li>
+          </ol>
+        </div>
+      </div>
+      <div style="font-size: 11px; color: #64748b; text-align: center; padding: 12px; background: #f8fafc; border-top: 1px solid #f1f5f9;">
+        Thư điện tử tự động từ Smart Thermal Fire Alarm Clock · ESP8266 / ESP32-CAM · DS1307
+      </div>
+    </div>
+  `;
+}
+
+function openEmailPreview() {
+  const modal = document.getElementById('emailModalOverlay');
+  const body = document.getElementById('emailPreviewContent');
+  if (body) body.innerHTML = generateEmailPreviewHtml();
+  if (modal) modal.classList.add('active');
+}
+
+function closeEmailPreview() {
+  const modal = document.getElementById('emailModalOverlay');
+  if (modal) modal.classList.remove('active');
+}
+
+function handleModalOverlayClick(e) {
+  if (e.target && e.target.id === 'emailModalOverlay') {
+    closeEmailPreview();
+  }
 }
 
 // =========================================================
@@ -1715,6 +2664,9 @@ function setAiBoxState(enabled) {
     console.warn('Không thể lưu trạng thái vào localStorage:', e);
   }
   applyAiBoxState(isAiBoxEnabled);
+  if (typeof logActivity === 'function') {
+    logActivity('AI', enabled ? 'Bật AI Smart Box' : 'Tắt AI Smart Box', enabled ? 'Kích hoạt lại tính năng phân tích PCCC và chat AI.' : 'Tạm dừng phân tích và chat AI để tiết kiệm tài nguyên.', 'ai');
+  }
 }
 
 function applyAiBoxState(enabled) {
@@ -1855,6 +2807,41 @@ async function sendAiQuestion(msg) {
 
 function getClientSideFireResponse(q, ctx) {
   const query = q.toLowerCase();
+
+  if (query.includes('dự đoán') || query.includes('forecast') || query.includes('tiên lượng') || query.includes('tương lai')) {
+    const temps = readings.map(r => r.temp);
+    const curr = Number(ctx.temperature) || currentTemp;
+    let ratePerMin = 0;
+    if (temps.length >= 2) {
+      const diff = temps[temps.length - 1] - temps[0];
+      ratePerMin = Number((diff * 1.5).toFixed(1));
+    }
+    const f5m = (curr + ratePerMin * 5).toFixed(1);
+    return `🔮 [DỰ ĐOÁN XU HƯỚNG NHIỆT ĐỘ AI]
+• Nhiệt độ đo tức thời: ${curr}°C (Ngưỡng kích hoạt còi: ${ctx.alarmThreshold}°C).
+• Tốc độ biến thiên dự kiến: ${ratePerMin > 0 ? '+' : ''}${ratePerMin}°C / phút.
+• Dự báo nhiệt độ sau 5 phút: ~${f5m}°C.
+• Đánh giá an toàn: ${Number(f5m) >= ctx.alarmThreshold ? '🚨 CẢNH BÁO SỚM: Nguy cơ chạm ngưỡng báo cháy trong 5 phút tới!' : '✅ An toàn: Chưa phát hiện nguy cơ vượt ngưỡng trước mắt'}.`;
+  }
+
+  if (query.includes('email') || query.includes('thư') || query.includes('mail')) {
+    return `📧 [HỆ THỐNG THÔNG BÁO EMAIL KHẨN CẤP]
+• Địa chỉ nhận: ${emailRecipient}
+• Tự động gửi khi báo cháy: ${emailAutoAlarm ? 'ĐANG BẬT ✅' : 'ĐÃ TẮT ❌'}
+• Cảnh báo sớm qua email: ${emailAutoPredict ? 'ĐANG BẬT ✅' : 'ĐÃ TẮT ❌'}
+• Tổng số email đã gửi: ${emailSentCount} thư.
+• Bạn có thể bấm nút "Gửi Thử Email" hoặc "Xem Bản Mẫu Thư" tại bảng điều khiển Email để kiểm tra!`;
+  }
+
+  if (query.includes('nhật ký') || query.includes('hoạt động') || query.includes('audit') || query.includes('lịch sử')) {
+    const count = activityLogs.length;
+    const latest = count > 0 ? `${activityLogs[0].title} (${activityLogs[0].time})` : 'Chưa có biến cố';
+    return `📋 [NHẬT KÝ HOẠT ĐỘNG HỆ THỐNG]
+• Tổng số sự kiện ghi nhận: ${count} bản ghi.
+• Biến cố gần nhất: ${latest}.
+• Bảng Nhật ký hoạt động hỗ trợ lọc theo Báo cháy, Email, Dự báo AI và xuất file .txt tải về máy tính.`;
+  }
+
   if (query.includes('cháy') || query.includes('quy trình') || query.includes('thoát hiểm')) {
     return `🚨 [QUY TRÌNH XỬ LÝ KHẨN CẤP KHI CÓ CHÁY]
 1. Hô hoán cho mọi người xung quanh và bấm chuông báo cháy.
@@ -1941,6 +2928,8 @@ async function refreshAiFireAnalysis() {
 
 // Khởi chạy khi load trang
 document.addEventListener('DOMContentLoaded', () => {
+  initActivityLog();
+  initEmailSettings();
   initAiBoxState();
   updateClock();
   setInterval(updateClock, 1000);

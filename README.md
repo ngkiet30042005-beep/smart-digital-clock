@@ -24,11 +24,19 @@ Dự án IoT kết hợp giữa **Đồng hồ thời gian thực (RTC DS1307)**
      3. **Simulation Radar Nhiệt**: Giả lập quét hồng ngoại, phát hiện đốm lửa và hiển thị khung Bounding Box AI Vision.
    - **Tự động chụp ảnh chứng cứ (Snapshot Evidence Log)** khi xảy ra báo cháy và lưu vào thư viện hiện trường.
 
-4. **Biểu đồ nhiệt & Nhật ký biến cố PCCC**:
-   - Biểu đồ cột đổi màu theo mức độ rủi ro (Xanh an toàn, Vàng chú ý >40°C, Đỏ nguy cấp >50°C).
-   - Bảng nhật ký ghi lại chi tiết các mốc cảnh báo nhiệt độ.
+4. **Biểu đồ nhiệt, Dự đoán AI & Nhật ký hoạt động kiểm toán**:
+   - **Biểu đồ nhiệt độ**: Cột đo màu chuyển đổi theo mức nhiệt (Xanh an toàn, Vàng chú ý >40°C, Đỏ nguy cấp >50°C).
+   - **Dự đoán nhiệt độ AI (Temperature Forecasting)**: Áp dụng thuật toán hồi quy tuyến tính (Linear Regression) trên dữ liệu mẫu nhiệt LM35 để dự báo trước mức nhiệt ở các mốc tương lai (+1 phút, +3 phút, +5 phút), tính toán tốc độ biến thiên (°C/phút) và dự đoán thời gian chạm ngưỡng báo cháy để phát cảnh báo sớm (Early-Warning).
+   - **Nhật ký hoạt động hệ thống (System Activity & Audit Log)**: Ghi nhận liên tục toàn bộ biến cố (Kích hoạt báo cháy, Bật/tắt còi hú, Thay đổi ngưỡng nhiệt độ, Gửi email thông báo, Chụp ảnh camera, Bật/tắt AI Box). Hỗ trợ bộ lọc thông minh (Tất cả / Báo cháy / Email / Dự báo / Bảng LM35), xóa nhật ký và xuất file `.txt` trực tiếp.
 
-5. **AI Smart Box chuyên gia PCCC & An toàn Môi trường**:
+5. **Hệ thống Thông báo qua Email khẩn cấp (Emergency Email Dispatcher)**:
+   - Cho phép tùy chỉnh địa chỉ Email nhận thông báo khẩn cấp (lưu tự động vào `localStorage`).
+   - Tự động phát email cảnh báo kèm mức nhiệt độ LM35, nhãn thời gian từ RTC DS1307, trạng thái camera và quy trình xử lý PCCC khẩn cấp.
+   - Hỗ trợ cảnh báo sớm qua email khi AI dự đoán nhiệt độ tăng nguy cơ chạm ngưỡng trong 5 phút.
+   - Tích hợp cơ chế chống spam thư (Email Cooldown & Debounce).
+   - Nút **Gửi Thử Email** và **Xem Trước Thư Mẫu (HTML Preview)** trực tiếp trên giao diện Dashboard.
+
+6. **AI Smart Box chuyên gia PCCC & An toàn Môi trường**:
    - **Công tắc Bật/Tắt AI Box (On/Off Toggle Switch)**: Cho phép người dùng chủ động bật hoặc tạm dừng toàn bộ mô-đun AI Box (phân tích tự động, chẩn đoán LM35, hỏi đáp chat) ngay tại tiêu đề panel hoặc từ giao diện chờ. Trạng thái bật/tắt được tự động lưu vào bộ nhớ trình duyệt (localStorage).
    - Chẩn đoán mức độ rủi ro cháy nổ tự động (Safe / Warning / Danger).
    - Tư vấn hướng dẫn thoát hiểm 4 bước khẩn cấp khi xảy ra hỏa hoạn.

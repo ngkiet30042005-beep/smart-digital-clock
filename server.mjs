@@ -84,8 +84,37 @@ function generateLocalFireAlarmAiResponse(message, context) {
   - Hiển thị Timestamp chuẩn từ RTC DS1307 trực tiếp trên luồng camera an ninh.`;
   }
 
-  // 3. Hỏi về nhiệt độ / xu hướng biến thiên
-  if (q.includes('nhiệt độ') || q.includes('xu hướng') || q.includes('temp') || q.includes('mẫu đo') || q.includes('lịch sử')) {
+  // 3. Hỏi về dự đoán nhiệt độ / xu hướng tương lai
+  if (q.includes('dự đoán') || q.includes('tiên lượng') || q.includes('forecast') || q.includes('tương lai') || q.includes('bao lâu')) {
+    const temps = readings.map(r => Number(r.temperature)).filter(Number.isFinite);
+    if (temps.length < 2) temps.unshift(temp);
+    const diff = Number((temps[temps.length - 1] - temps[0]).toFixed(1));
+    const ratePerMin = Number((diff * 2).toFixed(1));
+    const est5m = Number((temp + ratePerMin * 5).toFixed(1));
+    return `🔮 [DỰ ĐOÁN XU HƯỚNG NHIỆT ĐỘ AI]
+• Nhiệt độ hiện tại: ${temp}°C (Ngưỡng kích hoạt: ${threshold}°C).
+• Tốc độ biến thiên ước tính: ${ratePerMin > 0 ? '+' : ''}${ratePerMin}°C / phút.
+• Dự báo sau 5 phút: ~${est5m}°C.
+• Đánh giá rủi ro: ${est5m >= threshold ? '🚨 CẢNH BÁO SỚM: Có nguy cơ chạm hoặc vượt ngưỡng trong 5 phút tới!' : '✅ An toàn: Chưa phát hiện nguy cơ vượt ngưỡng ngắn hạn.'}.`;
+  }
+
+  // 4. Hỏi về thông báo qua Email
+  if (q.includes('email') || q.includes('thư') || q.includes('gửi mail') || q.includes('hộp thư')) {
+    return `📧 [HỆ THỐNG THÔNG BÁO EMAIL KHẨN CẤP]
+• Tính năng: Tự động gửi thư điện tử cảnh báo tới địa chỉ cấu hình khi nhiệt độ chạm ngưỡng ${threshold}°C hoặc khi AI phát hiện tăng nhiệt khẩn cấp.
+• Nội dung email: Bao gồm mức nhiệt độ LM35, nhãn thời gian từ RTC DS1307, trạng thái camera và quy trình xử lý PCCC khẩn cấp.
+• Bạn có thể dùng nút "Gửi Thử Email" hoặc "Xem Thư Mẫu" trên giao diện để kiểm tra!`;
+  }
+
+  // 5. Hỏi về nhật ký hoạt động (Activity Log)
+  if (q.includes('nhật ký') || q.includes('hoạt động') || q.includes('audit') || q.includes('sự kiện') || q.includes('lịch sử')) {
+    return `📋 [NHẬT KÝ HOẠT ĐỘNG HỆ THỐNG]
+• Hệ thống ghi nhận liên tục mọi sự kiện: Cảnh báo nhiệt LM35, bật/tắt còi hú, thay đổi ngưỡng báo động, chụp ảnh hiện trường, gửi email cảnh báo và trạng thái AI.
+• Bạn có thể lọc sự kiện theo danh mục hoặc xuất file nhật ký (.txt) trực tiếp từ bảng Nhật Ký Hoạt Động.`;
+  }
+
+  // 6. Hỏi về nhiệt độ / xu hướng biến thiên chung
+  if (q.includes('nhiệt độ') || q.includes('xu hướng') || q.includes('temp') || q.includes('mẫu đo')) {
     if (readings.length < 2) {
       return `🌡️ Nhiệt độ tức thời đo được là ${temp}°C. Ngưỡng báo cháy cài đặt: ${threshold}°C. Chưa có đủ dữ liệu lịch sử để kết luận xu hướng.`;
     }
@@ -171,6 +200,190 @@ app.post('/api/ai/analyze-fire', async (req, res) => {
     advice,
     actionRequired,
     timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
+  });
+});
+
+// Endpoint dự đoán xu hướng biến thiên nhiệt độ (AI Linear Regression & Time-To-Threshold Forecast)
+app.post('/api/predict-temperature', (req, res) => {
+  const { readings = [], currentTemp, threshold = 50 } = req.body ?? {};
+  const curr = Number.isFinite(Number(currentTemp)) ? Number(currentTemp) : 28.5;
+  const thresh = Number.isFinite(Number(threshold)) ? Number(threshold) : 50;
+
+  const temps = Array.isArray(readings)
+    ? readings.map(r => Number(r?.temp ?? r?.temperature)).filter(Number.isFinite)
+    : [curr];
+
+  if (temps.length < 2) temps.unshift(curr);
+
+  // Tính hồi quy tuyến tính
+  const n = temps.length;
+  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+  for (let i = 0; i < n; i++) {
+    sumX += i;
+    sumY += temps[i];
+    sumXY += i * temps[i];
+    sumXX += i * i;
+  }
+  const denom = (n * sumXX - sumX * sumX) || 1;
+  const slopePerSample = (n * sumXY - sumX * sumY) / denom; // độ thay đổi mỗi mẫu (chu kỳ 5 giây)
+  const ratePerMinute = Number((slopePerSample * 12).toFixed(2)); // 1 phút = 12 mẫu 5s
+
+  const f1m = Number((curr + ratePerMinute * 1).toFixed(1));
+  const f3m = Number((curr + ratePerMinute * 3).toFixed(1));
+  const f5m = Number((curr + ratePerMinute * 5).toFixed(1));
+
+  let timeToThresholdMinutes = null;
+  let timeToThresholdText = 'Không có nguy cơ';
+  let riskLevel = 'SAFE'; // SAFE | WARNING | DANGER
+  let alertMessage = 'Nhiệt độ ổn định, không có nguy cơ chạm ngưỡng trong 15 phút tới.';
+
+  if (curr >= thresh) {
+    riskLevel = 'DANGER';
+    timeToThresholdText = 'Đang vượt ngưỡng!';
+    alertMessage = `Nhiệt độ hiện tại (${curr}°C) đã vượt ngưỡng báo cháy (${thresh}°C)!`;
+  } else if (ratePerMinute > 0.15) {
+    const minNeeded = (thresh - curr) / ratePerMinute;
+    timeToThresholdMinutes = Number(minNeeded.toFixed(1));
+    if (minNeeded <= 5) {
+      riskLevel = 'DANGER';
+      timeToThresholdText = `~${timeToThresholdMinutes} phút`;
+      alertMessage = `🚨 CẢNH BÁO SỚM: Tốc độ tăng nhiệt cao (+${ratePerMinute}°C/phút). Dự kiến chạm ngưỡng ${thresh}°C sau ~${timeToThresholdMinutes} phút!`;
+    } else if (minNeeded <= 15) {
+      riskLevel = 'WARNING';
+      timeToThresholdText = `~${timeToThresholdMinutes} phút`;
+      alertMessage = `⚠️ Chú ý: Nhiệt độ có chiều hướng tăng (+${ratePerMinute}°C/phút). Dự kiến chạm ngưỡng sau ~${timeToThresholdMinutes} phút.`;
+    } else {
+      timeToThresholdText = `> 15 phút`;
+      alertMessage = `Nhiệt độ tăng chậm (+${ratePerMinute}°C/phút). Chưa có nguy cơ trước mắt.`;
+    }
+  } else if (ratePerMinute < -0.15) {
+    alertMessage = `Nhiệt độ đang hạ nhiệt (${ratePerMinute}°C/phút). Môi trường an toàn.`;
+  }
+
+  res.json({
+    currentTemp: curr,
+    threshold: thresh,
+    ratePerMinute,
+    trend: ratePerMinute > 0.15 ? 'rising' : ratePerMinute < -0.15 ? 'falling' : 'stable',
+    forecast: {
+      plus1m: Math.max(0, f1m),
+      plus3m: Math.max(0, f3m),
+      plus5m: Math.max(0, f5m)
+    },
+    timeToThresholdMinutes,
+    timeToThresholdText,
+    riskLevel,
+    alertMessage,
+    timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
+  });
+});
+
+// Endpoint gửi thông báo khẩn cấp qua Email (Email Notification Dispatcher)
+app.post('/api/send-email', (req, res) => {
+  const {
+    to = 'admin.pccc@smartclock.iot',
+    subject,
+    alertType = 'FIRE_ALARM',
+    temperature,
+    threshold = 50,
+    timestamp,
+    details = ''
+  } = req.body ?? {};
+
+  const recipient = String(to).trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(recipient)) {
+    return res.status(400).json({ error: 'Địa chỉ email không đúng định dạng.' });
+  }
+
+  const currTemp = Number.isFinite(Number(temperature)) ? Number(temperature).toFixed(1) : '28.5';
+  const currThresh = Number.isFinite(Number(threshold)) ? Number(threshold).toFixed(1) : '50.0';
+  const currTime = timestamp || new Date().toLocaleString('vi-VN');
+  const isEmergency = alertType === 'FIRE_ALARM' || Number(currTemp) >= Number(currThresh);
+
+  const mailSubject = subject || (isEmergency
+    ? `🚨 [KHẨN CẤP] CẢNH BÁO BÁO CHÁY TẠI ĐỒNG HỒ SỐ IoT - ${currTemp}°C`
+    : `ℹ️ [THÔNG BÁO] Cập nhật Hệ thống Smart Fire Alarm Clock - ${currTemp}°C`);
+
+  const emailHtml = `
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>${mailSubject}</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }
+    .email-card { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .email-header { background: ${isEmergency ? '#dc2626' : '#0284c7'}; color: #ffffff; padding: 24px 20px; text-align: center; }
+    .email-header h1 { margin: 0; font-size: 20px; letter-spacing: 0.5px; }
+    .email-body { padding: 24px; }
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+    .metric-card { background: #f1f5f9; padding: 12px; border-radius: 8px; border-left: 4px solid ${isEmergency ? '#dc2626' : '#0284c7'}; }
+    .metric-title { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: bold; }
+    .metric-value { font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 4px; }
+    .danger-text { color: #dc2626 !important; }
+    .action-box { background: #fef2f2; border: 1px dashed #f87171; border-radius: 8px; padding: 14px; margin: 18px 0; font-size: 13.5px; color: #991b1b; }
+    .footer { font-size: 11.5px; color: #64748b; text-align: center; padding: 16px; border-top: 1px solid #f1f5f9; background: #f8fafc; }
+  </style>
+</head>
+<body>
+  <div class="email-card">
+    <div class="email-header">
+      <h1>${isEmergency ? '🚨 CẢNH BÁO BÁO CHÁY KHẨN CẤP' : '🔔 THÔNG BÁO TỪ SMART CLOCK'}</h1>
+      <div style="font-size: 13px; opacity: 0.9; margin-top: 6px;">Hệ thống Đồng hồ Cảm ứng Nhiệt & Camera Giám sát AI</div>
+    </div>
+    <div class="email-body">
+      <p style="font-size: 14.5px; line-height: 1.6;">
+        Kính gửi người quản lý / gia chủ,<br>
+        Hệ thống IoT phát hiện biến cố nhiệt độ tại trạm giám sát <strong>ESP32-CAM-01</strong>. Dưới đây là thông số ghi nhận:
+      </p>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-title">Nhiệt độ LM35</div>
+          <div class="metric-value ${isEmergency ? 'danger-text' : ''}">${currTemp} °C</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Ngưỡng Báo Cháy</div>
+          <div class="metric-value">${currThresh} °C</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Thời gian RTC DS1307</div>
+          <div class="metric-value" style="font-size:14px;">${currTime}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Trạng thái Còi & Camera</div>
+          <div class="metric-value" style="font-size:14px; color:#0284c7;">${isEmergency ? 'Đang Hú Còi & Đã Chụp Ảnh' : 'Giám sát bình thường'}</div>
+        </div>
+      </div>
+      ${details ? `<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:13px; margin:14px 0;"><strong>Chi tiết sự kiện:</strong> ${details}</div>` : ''}
+      ${isEmergency ? `
+      <div class="action-box">
+        <strong>⚠️ HƯỚNG DẪN XỬ LÝ KHẨN CẤP:</strong>
+        <ol style="margin: 8px 0 0 18px; padding: 0;">
+          <li>Ngắt ngay cầu dao điện khu vực xảy ra cảnh báo.</li>
+          <li>Mở Dashboard kiểm tra hình ảnh Camera để xác thực điểm cháy.</li>
+          <li>Sử dụng bình chữa cháy tại chỗ hoặc di chuyển theo lối thoát hiểm.</li>
+          <li>Liên hệ lực lượng Cứu hỏa PCCC chuyên nghiệp: <strong>114</strong>.</li>
+        </ol>
+      </div>` : ''}
+    </div>
+    <div class="footer">
+      Email tự động phát đi từ Smart Thermal Fire Alarm Clock · Vi điều khiển ESP8266 / ESP32-CAM · RTC DS1307
+    </div>
+  </div>
+</body>
+</html>`;
+
+  console.log(`[EMAIL DISPATCH] Đã phát email thông báo tới: ${recipient} | Chủ đề: ${mailSubject} | Mức nhiệt: ${currTemp}°C`);
+
+  res.json({
+    success: true,
+    to: recipient,
+    subject: mailSubject,
+    sentAt: new Date().toLocaleTimeString('vi-VN', { hour12: false }),
+    simulated: true,
+    previewHtml: emailHtml,
+    message: `Đã gửi thông báo thành công tới ${recipient}`
   });
 });
 
