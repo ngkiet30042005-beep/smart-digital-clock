@@ -281,7 +281,7 @@ app.post('/api/predict-temperature', (req, res) => {
 // Endpoint gửi thông báo khẩn cấp qua Email (Email Notification Dispatcher)
 app.post('/api/send-email', (req, res) => {
   const {
-    to = 'admin.pccc@smartclock.iot',
+    to = 'ng.kiet30042005@gmail.com',
     subject,
     alertType = 'FIRE_ALARM',
     temperature,
